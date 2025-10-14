@@ -1,0 +1,311 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 import pickle\
+from sage.all import sigma, nth_prime, pari\
+import ast\
+import math\
+\
+# Increase PARI stack size to handle large polynomial root computations\
+pari.allocatemem(8*10**9)  # Allocate 4GB for PARI stack on desktop unit\
+    \
+def P_matrix(lst):\
+    lenlist=len(lst)\
+    columns=[lst]\
+    for k in range(1,lenlist):\
+        column=[0]*(k-1)\
+        column=column+[-k]\
+        column=flatten(column+[lst])\
+        column=column+[lst]\
+        column=column[:lenlist]\
+        columns+=[column]\
+    return (matrix(columns)).transpose()\
+\
+from sage.all import sigma, nth_prime\
+def tau(n):\
+    def step1(n, k):\
+        return 35*k^4 - 52*k^3*n + 18*k^2*n^2\
+    def step2(n, k):\
+        return sigma(k) * sigma(n - k)\
+    def step3(n):\
+        ans = 0\
+        for k in range(1, n):\
+            ans=ans+step1(n, k) * step2(n, k)\
+        return 24*ans\
+    return n^4 * sigma(n) - step3(n)\
+\
+def find_local_minima(data_list):\
+    """\
+    Find local minima in a list of (n, value) pairs.\
+    A point is a local minimum if it's smaller than both neighbors.\
+    """\
+    local_mins = []\
+    for i in range(1, len(data_list) - 1):\
+        prev_val = data_list[i-1][1]\
+        curr_val = data_list[i][1]\
+        next_val = data_list[i+1][1]\
+        \
+        if curr_val < prev_val and curr_val < next_val:\
+            local_mins.append(data_list[i])\
+    \
+    return local_mins\
+\
+from sage.all import *\
+precision_bits = 100\
+CIF = ComplexIntervalField(precision_bits)\
+x = polygen(QQ)  # Can remain in preamble if all polynomials are in one variable\
+\
+main_matrix_list=[]\
+main_charpol_list=[]\
+main_roots_list=[]\
+main_mins_list=[]\
+main_maxes_list=[]\
+main_dets=[]\
+main_j_list=[]\
+main_local_minima_list=[]  # NEW: Store local minima for each c\
+\
+for c in srange(-2/5,-1/5,1/5): # tests c= -2/5 only\
+    matrix_list=[]\
+    charpol_list=[]\
+    roots_list=[]\
+    aar_list=[]\
+    centers_list=[]\
+    max_diameter_list=[]\
+    mins_list=[]\
+    log_mins_list=[]\
+    maxes_list=[]\
+    log_maxes_list=[]\
+    dets=[]\
+    tests=[]\
+    def mobius_c(k):\
+        return moebius(k)-c\
+    mobius_c_list=[]\
+    for k in range(1, 501):\
+        mobius_c_list.append([k,mobius_c(k)])\
+    \
+    h_list=[[0,1]]+mobius_c_list  \
+    j_list=[(0,0)]\
+    for k in range(1,500):\
+        sm=0\
+        for r in [1..k-1]:\
+            sm=sm+j_list[r][1]*h_list[k-r][1] \
+    \
+        j_k=k*h_list[k][1]-sm\
+        j_list.append((k,j_k))\
+    main_j_list.append((c,j_list))\
+    for n in range(50,200):\
+        deformed_j_list=j_list[:n]\
+        inputs=[pair[1] for pair in deformed_j_list]\
+        pl=P_matrix(inputs)\
+        det=pl.det()\
+        print((RR(c),n))\
+        dets.append((n,det))\
+        matrix_list.append((n,pl))\
+        cp=pl.charpoly()\
+        charpol_list.append((n,cp))\
+        roots = cp.roots(ring=CIF, multiplicities=False)       \
+        roots_list.append((n,roots))\
+        centers=[r.center() for r in roots]\
+        pairs = [(z.real(), z.imag()) for z in roots]  \
+        aar = [r.abs() for r in roots]\
+        aar_list.append((n,aar))\
+    # compute absolute value for each root (before any conversion)\
+        if aar!=[]:\
+            minn = min(aar)  \
+            mins_list.append((n,minn))\
+            maxx = max(aar)  \
+            maxes_list.append((n,maxx))\
+            \
+    # NEW: Find local minima after collecting all mins_list data\
+    local_mins = find_local_minima(mins_list)\
+    main_local_minima_list.append((c, local_mins))\
+    \
+    main_matrix_list.append((c,matrix_list))\
+    main_dets.append((c,dets))\
+    main_charpol_list.append((c,charpol_list))\
+    main_roots_list.append((c,roots_list))\
+    main_mins_list.append((c,mins_list))\
+    main_maxes_list.append((c,maxes_list))\
+   \
+    # MODIFIED: Plot with local minima highlighted in red\
+    p = list_plot(mins_list, plotjoined=True, axes_labels=['', ''])\
+    if local_mins:  # Only add red dots if there are local minima\
+        p += list_plot(local_mins, color='red', size=10)\
+    print("MINIMUM MODULI")\
+    p.show()\
+    \
+    p = list_plot(maxes_list, plotjoined=True, axes_labels=['', ''])\
+    print("MAXIMUM MODULI")\
+    p.show()\
+        \
+with open('/Users/barrybrent/data/run13oct25no8.txt', 'wb') as wfile:\
+    pickle.dump(main_roots_list, wfile)\
+with open('/Users/barrybrent/data/run13oct25no9.txt', 'wb') as wfile:\
+    pickle.dump(main_charpol_list, wfile)\
+with open('/Users/barrybrent/data/run13oct25no310.txt', 'wb') as wfile:\
+    pickle.dump(main_mins_list, wfile)\
+with open('/Users/barrybrent/data/run13oct25no11.txt', 'wb') as wfile:\
+    pickle.dump(main_dets, wfile)\
+with open('/Users/barrybrent/data/run13oct25no12.txt', 'wb') as wfile:\
+    pickle.dump(main_maxes_list, wfile)\
+with open('/Users/barrybrent/data/run13oct25no13.txt', 'wb') as wfile:\
+    pickle.dump(main_j_list, wfile)\
+# NEW: Save the local minima\
+with open('/Users/barrybrent/data/run13oct25no14.txt', 'wb') as wfile:\
+    pickle.dump(main_local_minima_list, wfile)\
+\
+\
+from scipy.signal import find_peaks, correlate\
+from scipy.fft import fft, fftfreq\
+import numpy as np\
+\
+def periodic_behavior_score(main_local_minima_list, min_score=0.3, max_period=100):\
+    """\
+    Analyzes periodic behavior for all c values in main_local_minima_list.\
+    Uses autocorrelation and FFT to detect ANY periodic pattern (not just sine waves).\
+    Filters out results with weak periodicity or unreasonably large periods.\
+    \
+    Args:\
+        main_local_minima_list: List of tuples [(c1, points1), (c2, points2), ...]\
+                                where points are [(x1, y1), (x2, y2), ...]\
+        min_score: Minimum periodicity score to accept (default: 0.3)\
+        max_period: Maximum allowed period (default: 100). Results with larger periods are rejected.\
+    \
+    Returns:\
+        results: List of tuples [(c, score, info_dict), ...] for valid results only\
+    """\
+    \
+    results = []\
+    rejected = []\
+    \
+    print("=" * 80)\
+    print("PERIODIC BEHAVIOR ANALYSIS RESULTS")\
+    print(f"(Rejecting: score < \{min_score\} or period > \{max_period\})")\
+    print("=" * 80)\
+    \
+    for c, points in main_local_minima_list:\
+        if len(points) < 4:\
+            print(f"\\nSkipping c = \{c\}: only \{len(points)\} points (need at least 4)")\
+            continue\
+        \
+        # Extract x and y coordinates, converting to plain floats\
+        x_data = np.array([float(p[0]) for p in points])\
+        y_data = np.array([float(p[1]) for p in points])\
+        \
+        # Remove mean (detrend)\
+        y_detrended = y_data - np.mean(y_data)\
+        \
+        # --- Method 1: Autocorrelation Analysis ---\
+        autocorr = correlate(y_detrended, y_detrended, mode='full')\
+        autocorr = autocorr[len(autocorr)//2:]\
+        autocorr = autocorr / autocorr[0]  # Normalize\
+        \
+        # Find peaks in autocorrelation (excluding the first peak at lag=0)\
+        peaks, properties = find_peaks(autocorr[1:], prominence=0.1, distance=3)\
+        peaks = peaks + 1  # Adjust for excluding first element\
+        \
+        # Calculate periodicity score from autocorrelation\
+        if len(peaks) > 0:\
+            autocorr_score = autocorr[peaks[0]] if peaks[0] < len(autocorr) else 0\
+            spacing = np.mean(np.diff(x_data))\
+            autocorr_period = peaks[0] * spacing\
+        else:\
+            autocorr_score = 0\
+            autocorr_period = None\
+        \
+        # --- Method 2: FFT Analysis ---\
+        n = len(y_detrended)\
+        yf = fft(y_detrended)\
+        spacing = np.mean(np.diff(x_data))\
+        xf = fftfreq(n, spacing)[:n//2]\
+        power = 2.0/n * np.abs(yf[:n//2])\
+        \
+        if len(power) > 1:\
+            dominant_freq_idx = np.argmax(power[1:]) + 1\
+            dominant_freq = xf[dominant_freq_idx]\
+            fft_period = 1/dominant_freq if dominant_freq > 0 else None\
+            \
+            # FFT score: ratio of dominant peak to mean power\
+            mean_power = np.mean(power[1:])\
+            fft_score = power[dominant_freq_idx] / mean_power if mean_power > 0 else 0\
+            fft_score = min(fft_score / 10, 1.0)  # Normalize to 0-1 range\
+        else:\
+            fft_period = None\
+            fft_score = 0\
+            dominant_freq = 0\
+        \
+        # --- Combined Score ---\
+        combined_score = (autocorr_score + fft_score) / 2\
+        \
+        # Determine best period estimate\
+        if autocorr_period and fft_period:\
+            # Use autocorr period if both are available and similar\
+            if abs(autocorr_period - fft_period) / max(autocorr_period, fft_period) < 0.3:\
+                best_period = autocorr_period\
+                period_confidence = "high"\
+            else:\
+                # Use the one with higher score\
+                best_period = autocorr_period if autocorr_score > fft_score else fft_period\
+                period_confidence = "moderate"\
+        elif autocorr_period:\
+            best_period = autocorr_period\
+            period_confidence = "moderate"\
+        elif fft_period:\
+            best_period = fft_period\
+            period_confidence = "low"\
+        else:\
+            best_period = None\
+            period_confidence = "none"\
+        \
+        # Check rejection criteria\
+        rejection_reason = None\
+        if combined_score < min_score:\
+            rejection_reason = f"score = \{combined_score:.3f\} (too low)"\
+        elif best_period and best_period > max_period:\
+            rejection_reason = f"period = \{best_period:.2f\} (too large)"\
+        \
+        if rejection_reason:\
+            print(f"\\nREJECTED c = \{c\}: \{rejection_reason\}")\
+            print(f"  (\{len(peaks)\} autocorrelation peaks found)")\
+            rejected.append((c, combined_score, best_period))\
+            continue\
+        \
+        # Package results\
+        info_dict = \{\
+            'combined_score': combined_score,\
+            'autocorr_score': autocorr_score,\
+            'autocorr_period': autocorr_period,\
+            'autocorr_peaks': len(peaks),\
+            'fft_score': fft_score,\
+            'fft_period': fft_period,\
+            'dominant_frequency': dominant_freq,\
+            'best_period': best_period,\
+            'period_confidence': period_confidence\
+        \}\
+        \
+        results.append((c, combined_score, info_dict))\
+        \
+        print(f"\\nAnalyzing c = \{c\}:")\
+        print(f"  Autocorrelation peaks found: \{len(peaks)\}")\
+        print(f"  Combined periodicity score = \{combined_score:.6f\}")\
+        print(f"  Best period estimate = \{best_period:.4f\} (confidence: \{period_confidence\})")\
+        print(f"  Autocorrelation: score = \{autocorr_score:.4f\}, period = \{(autocorr_period if autocorr_period else 0):.4f\}")\
+        print(f"  FFT: score = \{fft_score:.4f\}, period = \{(fft_period if fft_period else 0):.4f\}")\
+        print(f"  Dominant frequency = \{dominant_freq:.6f\}")\
+    \
+    print("\\n" + "=" * 80)\
+    print(f"ANALYSIS COMPLETE: \{len(results)\} valid results, \{len(rejected)\} rejected")\
+    print("=" * 80)\
+    \
+    return results\
+\
+\
+# Call with default parameters\
+results = periodic_behavior_score(main_mins_list, min_score=0.3, max_period=100)\
+\
+# Or adjust the thresholds if needed:\
+# results = periodic_behavior_score(main_local_minima_list, min_score=0.4, max_period=75)}
