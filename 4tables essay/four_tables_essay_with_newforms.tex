@@ -1,0 +1,696 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{A Guide to Elliptic Curve Invariants:\\Understanding the Four Tables}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We explain four tables of arithmetic and modular data for elliptic curves over $\mathbb{Q}$ with conductor $N \leq 54$, aimed at mathematicians with general background but limited number theory experience. We develop the theory from basics: elliptic curves as algebraic groups, the Mordell-Weil theorem, modular forms and the Modularity Theorem, Galois representations, and why representation-theoretic data matters for understanding L-functions and arithmetic. All technical terms are defined before use.
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+\section{Introduction: What Are We Looking At?}
+
+These four tables catalog various invariants of elliptic curves over $\mathbb{Q}$---smooth projective curves of genus 1 with a specified rational point. While geometrically simple objects, elliptic curves connect to deep areas of modern number theory: they admit a group structure (making them abelian varieties), they parametrize modular forms via the Modularity Theorem, and they carry rich Galois representations encoding arithmetic information.
+
+The tables split this data into natural categories:
+\begin{enumerate}
+\item \textbf{Table 1}: Basic invariants---weight, torsion, rank
+\item \textbf{Table 2}: Mordell-Weil generators and Galois representations
+\item \textbf{Table 3}: Galois exceptional primes and modular groups
+\item \textbf{Table 4}: Modular curves and L-functions
+\end{enumerate}
+
+We also include data for Ramanujan's $\Delta$ function, a weight 12 modular form, which serves as a conceptual bridge between elliptic curves and more general modular forms.
+
+\section{Background: Elliptic Curves and Their Groups}
+
+\subsection{Definition and Basic Structure}
+
+\begin{definition}
+An \textbf{elliptic curve} over $\mathbb{Q}$ is a smooth projective curve $E$ of genus 1 with a specified rational point $O \in E(\mathbb{Q})$.
+\end{definition}
+
+Such curves can always be written in \textbf{Weierstrass form}:
+$$E: y^2 = x^3 + Ax + B$$
+where $A, B \in \mathbb{Q}$ and $\Delta = -16(4A^3 + 27B^2) \neq 0$ (smoothness condition). The specified point is typically $O = [0:1:0]$ at infinity.
+
+The miracle: $E(\mathbb{Q})$ forms an \textbf{abelian group} under a geometric addition law. Given two points $P, Q \in E(\mathbb{Q})$, the line through $P$ and $Q$ intersects $E$ in a third point $R$, and we define $P + Q$ to be the reflection of $R$ across the $x$-axis. The point $O$ serves as the identity.
+
+We write $[n]P$ for the $n$-fold sum:
+$$[n]P = \underbrace{P + P + \cdots + P}_{n \text{ times}}$$
+
+\subsection{The $j$-Invariant}
+
+\begin{definition}
+The \textbf{$j$-invariant} of an elliptic curve $E: y^2 = x^3 + Ax + B$ is:
+$$j(E) = 1728 \cdot \frac{4A^3}{4A^3 + 27B^2}$$
+\end{definition}
+
+This is a rational function that completely determines the isomorphism class of $E$ over an algebraically closed field.
+
+\textbf{Key fact}: Two elliptic curves over $\overline{\mathbb{Q}}$ are isomorphic if and only if they have the same $j$-invariant. Over $\mathbb{Q}$, the situation is more subtle---curves with the same $j$-invariant are related by twists.
+
+\subsection{The Conductor}
+
+The \textbf{conductor} $N$ is a positive integer measuring the arithmetic complexity of the curve. For each prime $p$, we reduce the Weierstrass equation modulo $p$:
+
+\begin{definition}
+An elliptic curve $E$ has:
+\begin{itemize}
+\item \textbf{Good reduction} at $p$ if the reduced curve $\tilde{E}/\mathbb{F}_p$ is smooth (nonsingular)
+\item \textbf{Bad reduction} at $p$ if $\tilde{E}/\mathbb{F}_p$ is singular (has a node or cusp)
+\end{itemize}
+\end{definition}
+
+Bad reduction comes in two types:
+\begin{itemize}
+\item \textbf{Multiplicative reduction}: $\tilde{E}$ has a node (ordinary double point)
+\item \textbf{Additive reduction}: $\tilde{E}$ has a cusp
+\end{itemize}
+
+The conductor encodes this information:
+$$N = \prod_{p \text{ bad}} p^{f_p}$$
+where the exponent $f_p$ is defined by:
+$$f_p = \begin{cases}
+0 & \text{good reduction} \\
+1 & \text{multiplicative reduction} \\
+2 + \delta_p & \text{additive reduction}
+\end{cases}$$
+and $\delta_p \geq 0$ measures the ``wildness'' of the additive reduction (related to valuations of the minimal discriminant and $j$-invariant at $p$).
+
+\textbf{Interpretation}: The conductor is both a geometric invariant (measuring singularities of reduction) and an arithmetic invariant (appearing in functional equations of L-functions). Smaller conductor indicates ``better'' arithmetic behavior.
+
+\subsection{The Cremona Label}
+
+Elliptic curves are organized into \textbf{isogeny classes}---equivalence classes under isogenies (surjective morphisms with finite kernel). The \textbf{Cremona label} has the form $NXm$:
+\begin{itemize}
+\item $N$ = conductor
+\item $X$ = letter (a, b, c, ...) indicating isogeny class
+\item $m$ = number ordering curves in the class
+\end{itemize}
+
+Example: \texttt{11a1}, \texttt{11a2}, \texttt{11a3} are three curves of conductor 11 in the first isogeny class.
+
+\section{Table 1: Basic Arithmetic Invariants}
+
+\subsection{Column A: Curve Label}
+
+As described above. The tables include all curves with $N \leq 54$ from the Cremona database, plus the special entry ``$\Delta$'' for Ramanujan's cusp form.
+
+\subsection{Column B: Weight}
+
+This refers to the \textbf{weight of the associated modular form}. To understand this, we need the Modularity Theorem.
+
+A \textbf{modular form} of weight $k$ for a congruence subgroup $\Gamma \subseteq \text{SL}_2(\mathbb{Z})$ is a holomorphic function $f: \mathbb{H} \to \mathbb{C}$ on the upper half-plane satisfying:
+$$f\left(\frac{az+b}{cz+d}\right) = (cz+d)^k f(z)$$
+for all $\begin{pmatrix} a & b \\ c & d \end{pmatrix} \in \Gamma$, plus growth conditions at cusps.
+
+A \textbf{cusp form} additionally vanishes at all cusps. The space of weight $k$ cusp forms for $\Gamma_0(N)$ is denoted $S_k(\Gamma_0(N))$.
+
+\subsubsection{Newforms, Oldforms, and Levels}
+
+Before stating the Modularity Theorem, we must clarify crucial terminology about levels and newforms.
+
+\begin{definition}
+For a modular form $f$, we say $f$ \textbf{has level $N$} or \textbf{appears at level $N$} if $f \in S_k(\Gamma_0(N))$.
+\end{definition}
+
+A key observation: if $f \in S_k(\Gamma_0(N))$ and $M$ is any multiple of $N$ (i.e., $N | M$), then $f \in S_k(\Gamma_0(M))$ as well. This is because $\Gamma_0(M) \subseteq \Gamma_0(N)$, so the transformation property for $\Gamma_0(N)$ automatically implies the transformation property for the smaller group $\Gamma_0(M)$.
+
+This means: \textbf{a single modular form appears at infinitely many levels}---all multiples of some minimal level.
+
+\begin{definition}
+The space $S_k(\Gamma_0(N))$ decomposes as:
+$$S_k(\Gamma_0(N)) = S_k^{\text{new}}(\Gamma_0(N)) \oplus S_k^{\text{old}}(\Gamma_0(N))$$
+where:
+\begin{itemize}
+\item $S_k^{\text{new}}(\Gamma_0(N))$ is the space of \textbf{newforms} at level $N$---forms that do \emph{not} come from any proper divisor of $N$
+\item $S_k^{\text{old}}(\Gamma_0(N))$ is the space of \textbf{oldforms} at level $N$---forms that already appeared at some level $M$ with $M | N$ and $M < N$
+\end{itemize}
+\end{definition}
+
+More precisely:
+$$S_k^{\text{old}}(\Gamma_0(N)) = \sum_{\substack{d | N \\ d < N}} S_k^{\text{new}}(\Gamma_0(d))$$
+
+A form is ``new'' at level $N$ if it genuinely first appears at that level, not having come from a lower level.
+
+\begin{definition}
+For a newform $f \in S_k^{\text{new}}(\Gamma_0(N))$, we call $N$ the \textbf{conductor} of $f$ (as a modular form). This is the minimal level at which $f$ appears.
+\end{definition}
+
+\textbf{Key distinction}:
+\begin{itemize}
+\item A newform $f$ \textbf{has conductor $N$} (unique, minimal, intrinsic)
+\item The same form $f$ \textbf{appears at levels $N, 2N, 3N, \ldots$} (infinitely many, as oldform for $M > N$)
+\end{itemize}
+
+\begin{theorem}[Minimality of Newform Level]
+Let $f \in S_k^{\text{new}}(\Gamma_0(N))$ be a newform. Then:
+\begin{enumerate}
+\item $f \in S_k(\Gamma_0(M))$ if and only if $N | M$
+\item $N$ is the unique minimal positive integer such that $f \in S_k(\Gamma_0(N))$
+\end{enumerate}
+\end{theorem}
+
+\textbf{Why newforms matter}: Newforms are Hecke eigenforms with well-defined arithmetic meaning. Oldforms are linear combinations of newforms from lower levels---they don't give new arithmetic information, just redundancy. To study the arithmetic of modular forms, we focus on newforms at their minimal level (conductor).
+
+\textbf{Example}: Consider the newform $f$ associated to the elliptic curve 11a1. This newform has conductor 11, meaning:
+\begin{itemize}
+\item $f \in S_2^{\text{new}}(\Gamma_0(11))$ (newform at level 11)
+\item $f \in S_2(\Gamma_0(22))$ (oldform at level 22, since $11 | 22$)
+\item $f \in S_2(\Gamma_0(33))$ (oldform at level 33, since $11 | 33$)
+\item $f \in S_2(\Gamma_0(11k))$ for any $k \geq 1$ (oldform when $k > 1$)
+\end{itemize}
+But we say $f$ ``has level 11'' or ``has conductor 11'' because that's where it's new.
+
+\begin{theorem}[Modularity Theorem, Wiles-Taylor-Breuil-Conrad-Diamond]
+Every elliptic curve $E/\mathbb{Q}$ of conductor $N$ corresponds to a weight 2 newform $f_E \in S_2^{\text{new}}(\Gamma_0(N))$.
+\end{theorem}
+
+\textbf{Unpacking the statement}: 
+\begin{itemize}
+\item The conductor of $E$ (defined geometrically via bad reduction: $N = \prod_{p \text{ bad}} p^{f_p}$)
+\item \textbf{Equals} the conductor of $f_E$ (defined as the minimal level where $f_E$ appears as a newform)
+\item This equality is the content of the Modularity Theorem---two a priori different notions of ``conductor'' coincide
+\end{itemize}
+
+\textbf{The correspondence}: For primes $p \nmid N$, the $p$-th Fourier coefficient of $f_E = \sum_{n=1}^{\infty} a_n q^n$ (where $q = e^{2\pi iz}$) satisfies:
+$$a_p = p + 1 - \#E(\mathbb{F}_p)$$
+This connects the analytic object $f_E$ to the arithmetic of $E$.
+
+For elliptic curves, the weight is always $k = 2$. For Ramanujan's $\Delta$ function:
+$$\Delta(z) = q \prod_{n=1}^{\infty} (1-q^n)^{24} = \sum_{n=1}^{\infty} \tau(n) q^n$$
+we have $k = 12$. The function $\Delta$ generates the 1-dimensional space $S_{12}(\text{SL}_2(\mathbb{Z}))$.
+
+\textbf{Why weight matters}: The weight determines transformation properties and growth conditions. Higher weight means faster decay at cusps. Weight 2 is special: it corresponds to differential forms on modular curves, linking to algebraic geometry.
+
+\subsection{Column C: Torsion Order}
+
+\begin{definition}
+A point $P \in E(\mathbb{Q})$ is a \textbf{torsion point} if it has finite order, i.e., there exists $n \geq 1$ such that $[n]P = O$.
+\end{definition}
+
+The set of all torsion points forms a subgroup $E(\mathbb{Q})_{\text{tors}} \subseteq E(\mathbb{Q})$.
+
+The Mordell-Weil theorem states that $E(\mathbb{Q})$ is a finitely generated abelian group. By the structure theorem:
+$$E(\mathbb{Q}) \cong \mathbb{Z}^r \oplus E(\mathbb{Q})_{\text{tors}}$$
+where $r \geq 0$ is the \textbf{rank} (Column E) and $E(\mathbb{Q})_{\text{tors}}$ is the finite \textbf{torsion subgroup}.
+
+Column C shows $|E(\mathbb{Q})_{\text{tors}}|$, the order of this torsion subgroup.
+
+\begin{theorem}[Mazur, 1977]
+For elliptic curves over $\mathbb{Q}$, the torsion subgroup is one of exactly 15 possibilities:
+$$\mathbb{Z}/m\mathbb{Z}, \quad m \in \{1,2,3,4,5,6,7,8,9,10,12\}$$
+or
+$$\mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2m\mathbb{Z}, \quad m \in \{1,2,3,4\}$$
+\end{theorem}
+
+This is a remarkable rigidity theorem---over other number fields, many more structures are possible.
+
+\subsection{Column D: Torsion Structure}
+
+This gives the explicit group structure as a product of cyclic groups $\mathbb{Z}/n_1\mathbb{Z} \times \cdots \times \mathbb{Z}/n_k\mathbb{Z}$ where $n_i | n_{i+1}$ (invariant factors form).
+
+Examples from the table:
+\begin{itemize}
+\item ``$\mathbb{Z}/5\mathbb{Z}$'': Cyclic group of order 5
+\item ``$\mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/4\mathbb{Z}$'': Non-cyclic group of order 8
+\item ``0'' or ``trivial'': Trivial group (no torsion)
+\end{itemize}
+
+\textbf{Why torsion matters}: Torsion points are defined over $\mathbb{Q}$, so they're ``easy'' rational points. For cryptography, we want large rank (many generators) but small torsion. For Diophantine problems, torsion can obstruct or facilitate solutions.
+
+\subsection{Column E: Rank}
+
+The \textbf{rank} $r$ is the $\mathbb{Z}$-rank of the free part of $E(\mathbb{Q})$. Geometrically, it's the number of independent rational points of infinite order.
+
+\begin{example}
+The curve $\texttt{37a1}: y^2 + y = x^3 - x$ has rank 1. One generator is $P = (0, 0)$, and every rational point is of the form $[n]P + T$ where $T$ is a torsion point and $n \in \mathbb{Z}$.
+\end{example}
+
+\textbf{The rank problem}: Computing the rank is \textbf{hard}. The best algorithms (descent methods) work provably for small rank but can fail for larger rank. The Birch and Swinnerton-Dyer (BSD) conjecture predicts:
+$$\text{rank} = \text{ord}_{s=1} L(E, s)$$
+where $L(E, s)$ is the L-function (see Section 6.6). For rank 0 and 1, BSD is proven in many cases, making rank computation feasible.
+
+In our dataset ($N \leq 54$), we have:
+\begin{itemize}
+\item Rank 0: 138 curves
+\item Rank 1: 3 curves (37a1, 43a1, 53a1)
+\item Rank $\geq 2$: 0 curves
+\end{itemize}
+
+\section{Table 2: Mordell-Weil Generators and Galois Representations}
+
+\subsection{Column B: Number of Generators}
+
+For a rank $r$ curve, we need exactly $r$ points to generate the free part $\mathbb{Z}^r$ of $E(\mathbb{Q})/E(\mathbb{Q})_{\text{tors}}$. Column B shows this count. For rank 0 curves, this is 0. For the three rank 1 curves, this is 1.
+
+\subsection{Column C: Generator Heights}
+
+Given a point $P = (x, y) \in E(\mathbb{Q})$ with $x = n/d$ in lowest terms, the \textbf{naive height} is:
+$$h(P) = \log \max(|n|, |d|)$$
+
+This measures arithmetic complexity but isn't well-behaved under the group law. The \textbf{canonical height} (or Néron-Tate height) is:
+$$\hat{h}(P) = \lim_{n \to \infty} \frac{h([2^n]P)}{4^n}$$
+
+The canonical height is a \textbf{positive definite quadratic form}:
+\begin{itemize}
+\item $\hat{h}(P) \geq 0$ with equality iff $P \in E(\mathbb{Q})_{\text{tors}}$
+\item $\hat{h}([m]P) = m^2 \hat{h}(P)$
+\item $\hat{h}(P+Q) + \hat{h}(P-Q) = 2\hat{h}(P) + 2\hat{h}(Q)$ (parallelogram law)
+\end{itemize}
+
+\textbf{Quadratic form interpretation}: The parallelogram law makes $\hat{h}$ a quadratic form. The associated symmetric bilinear pairing is:
+$$\langle P, Q \rangle := \frac{1}{2}(\hat{h}(P+Q) - \hat{h}(P) - \hat{h}(Q))$$
+
+For generators $P_1, \ldots, P_r$ of $E(\mathbb{Q})/E(\mathbb{Q})_{\text{tors}}$, write any point as $P = \sum_{i=1}^r n_i P_i$ with $n_i \in \mathbb{Z}$. Then:
+$$\hat{h}(P) = \sum_{i,j=1}^r n_i n_j \langle P_i, P_j \rangle$$
+
+This is a homogeneous quadratic polynomial in $(n_1, \ldots, n_r)$ with coefficients $\langle P_i, P_j \rangle$. The matrix $H_{ij} = \langle P_i, P_j \rangle$ is positive definite.
+
+Column C lists $\hat{h}(P_i)$ for each generator $P_i$. These are numerical approximations (typically accurate to $10^{-10}$ or better) computed using a finite approximation to the limiting process.
+
+\textbf{Why heights matter}: Heights measure arithmetic complexity. Small height means ``simple'' rational point. Height theory connects to:
+\begin{itemize}
+\item Counting rational points of bounded height
+\item Effective versions of Mordell's theorem
+\item The regulator (next column)
+\end{itemize}
+
+\subsection{Column D: Regulator}
+
+For generators $P_1, \ldots, P_r$ of $E(\mathbb{Q})/E(\mathbb{Q})_{\text{tors}}$, the \textbf{regulator} is:
+$$\text{Reg}(E/\mathbb{Q}) = \det\left(\langle P_i, P_j \rangle\right)_{1 \leq i,j \leq r}$$
+
+For rank 1, the regulator equals the height of the generator: $\text{Reg} = \hat{h}(P_1)$. For rank 0, we set $\text{Reg} = 1$ by convention.
+
+\textbf{Why the regulator matters}: It appears in the BSD conjecture:
+$$\lim_{s \to 1} \frac{L(E, s)}{(s-1)^r} = \frac{\Omega_E \cdot \text{Reg}(E/\mathbb{Q}) \cdot \prod_p c_p \cdot |\text{Sha}(E/\mathbb{Q})|}{|E(\mathbb{Q})_{\text{tors}}|^2}$$
+where $\Omega_E$ is a period, $c_p$ are Tamagawa numbers, and $\text{Sha}$ is the Tate-Shafarevich group. The regulator measures the ``volume'' of the lattice of rational points.
+
+\subsection{Column E: Galois Representation Surjective for All Primes?}
+
+Now we enter representation theory. For each prime $\ell$, consider the $\ell$-torsion:
+$$E[\ell] = \{P \in E(\overline{\mathbb{Q}}) : [\ell]P = O\}$$
+
+This is a 2-dimensional vector space over $\mathbb{F}_\ell$: $E[\ell] \cong \mathbb{F}_\ell^2$ as abelian groups.
+
+The absolute Galois group $G_{\mathbb{Q}} = \text{Gal}(\overline{\mathbb{Q}}/\mathbb{Q})$ acts on $E[\ell]$ by:
+$$\sigma \cdot P = \sigma(x, y) \text{ for } P = (x, y) \in E[\ell]$$
+where $\sigma$ extends to coordinates. This action respects the group structure, giving a representation:
+$$\rho_{E,\ell}: G_{\mathbb{Q}} \to \text{Aut}(E[\ell]) \cong \text{GL}_2(\mathbb{F}_\ell)$$
+
+\textbf{The question}: Is $\rho_{E,\ell}$ surjective onto $\text{GL}_2(\mathbb{F}_\ell)$?
+
+Column E answers: ``Is $\rho_{E,\ell}$ surjective for \emph{all} primes $\ell$?'' 
+\begin{itemize}
+\item Y (Yes/True) = surjective for all $\ell$
+\item N (No/False) = non-surjective for at least one $\ell$
+\end{itemize}
+
+\textbf{What does Galois action mean?} The Galois group $G_{\mathbb{Q}}$ permutes the algebraic numbers. When it acts on $E[\ell]$, it permutes the $\ell$-torsion points while preserving the group structure. Larger image of $\rho_{E,\ell}$ means Galois ``mixes'' the $\ell$-torsion points more thoroughly.
+
+\textbf{How is ``more'' quantified?} By the size $|\text{im}(\rho_{E,\ell})|$ and structure of the image subgroup. Maximal mixing occurs when $\text{im}(\rho_{E,\ell}) = \text{GL}_2(\mathbb{F}_\ell)$, which has order:
+$$|\text{GL}_2(\mathbb{F}_\ell)| = \ell(\ell-1)^2(\ell+1)$$
+
+\textbf{Why this matters}: Galois representations encode arithmetic information:
+\begin{itemize}
+\item \textbf{Local data}: For $\ell \nmid N$, the trace $\text{tr}(\rho_{E,\ell}(\text{Frob}_p))$ equals $a_p$, the coefficient in $f_E = \sum a_n q^n$
+\item \textbf{Torsion fields}: $\mathbb{Q}(E[\ell])$ is the fixed field of $\ker(\rho_{E,\ell})$
+\item \textbf{Modularity}: The representation connects to automorphic forms
+\item \textbf{L-functions}: Functional equations and special values
+\end{itemize}
+
+\begin{definition}
+An elliptic curve $E/\mathbb{Q}$ has \textbf{complex multiplication} (CM) if its endomorphism ring over $\overline{\mathbb{Q}}$ is strictly larger than $\mathbb{Z}$:
+$$\text{End}_{\overline{\mathbb{Q}}}(E) \supsetneq \mathbb{Z}$$
+By theory, when this occurs, $\text{End}_{\overline{\mathbb{Q}}}(E) \cong \mathcal{O}_K$ is an order in an imaginary quadratic field $K = \mathbb{Q}(\sqrt{D})$ with $D < 0$.
+\end{definition}
+
+\begin{theorem}[Serre]
+For non-CM curves over $\mathbb{Q}$, the representation $\rho_{E,\ell}$ is surjective for all but finitely many primes $\ell$.
+\end{theorem}
+
+Most entries in Column E are ``N'' because even one exceptional prime makes it false. Table 3 lists these exceptional primes.
+
+\section{Table 3: Galois Exceptional Primes and Modular Data}
+
+\subsection{Column B: Galois Representation Exceptional Primes}
+
+This lists the finite set of primes $\ell$ where $\rho_{E,\ell}$ fails to be surjective. Notation: ``2|3|5'' means primes 2, 3, and 5.
+
+\textbf{Why non-surjectivity occurs}:
+
+To understand this, we need the subgroup structure of $\text{GL}_2(\mathbb{F}_\ell)$.
+
+\begin{definition}
+The \textbf{Borel subgroup} $B \subseteq \text{GL}_2(\mathbb{F}_\ell)$ is the subgroup of upper-triangular matrices:
+$$B = \left\{ \begin{pmatrix} a & b \\ 0 & d \end{pmatrix} : ad \neq 0 \right\}$$
+\end{definition}
+
+\textbf{Interpretation}: $B$ is the stabilizer of the line $\langle e_1 \rangle \subseteq \mathbb{F}_\ell^2$ (spanned by the first basis vector). Elements of $B$ scale this line and act arbitrarily on the quotient space.
+
+\begin{definition}
+A \textbf{Cartan subgroup} of $\text{GL}_2(\mathbb{F}_\ell)$ is a maximal abelian subgroup. There are two conjugacy classes:
+
+\textbf{Split Cartan}: The diagonal matrices
+$$C_s = \left\{ \begin{pmatrix} a & 0 \\ 0 & d \end{pmatrix} : ad \neq 0 \right\} \cong \mathbb{F}_\ell^* \times \mathbb{F}_\ell^*$$
+This has order $(\ell-1)^2$.
+
+\textbf{Non-split Cartan}: The image of the embedding $\mathbb{F}_{\ell^2}^* \hookrightarrow \text{GL}_2(\mathbb{F}_\ell)$, where multiplication by elements of $\mathbb{F}_{\ell^2}$ acts as $\mathbb{F}_\ell$-linear maps on $\mathbb{F}_{\ell^2} \cong \mathbb{F}_\ell^2$. This has order $\ell^2 - 1$ and is cyclic.
+\end{definition}
+
+\textbf{Explicit non-split Cartan}: If $\mathbb{F}_{\ell^2} = \mathbb{F}_\ell[t]/(t^2 - d)$ where $d \in \mathbb{F}_\ell$ is not a square, then the element $t$ acts as:
+$$t \mapsto \begin{pmatrix} 0 & d \\ 1 & 0 \end{pmatrix}$$
+and generates (with scalars) a cyclic subgroup of order $\ell^2-1$.
+
+Now we can describe when $\rho_{E,\ell}$ is not surjective:
+
+\begin{enumerate}
+\item \textbf{Rational $\ell$-torsion}: If $E(\mathbb{Q})[\ell] \neq 0$, then $\rho_{E,\ell}$ fixes a non-zero point $P \in E[\ell]$, so the image is contained in the stabilizer of $\langle P \rangle$, which is conjugate to a Borel subgroup.
+
+Example: Curves 11a1, 11a2, 11a3 all have 5-torsion over $\mathbb{Q}$ (visible in Column D of Table 1), so $\rho_{E,5}$ is not surjective.
+
+\item \textbf{Rational $\ell$-isogeny}: If there's an isogeny $E \to E'$ of degree $\ell$ defined over $\mathbb{Q}$, the image of $\rho_{E,\ell}$ is contained in the normalizer of a Cartan subgroup.
+
+\item \textbf{Complex multiplication}: If $E$ has CM, the extra endomorphisms force the image of $\rho_{E,\ell}$ to lie in the normalizer of a Cartan subgroup for all $\ell$.
+\end{enumerate}
+
+For small $\ell$ (especially $\ell = 2, 3$), there can be \textbf{exceptional subgroups}---subgroups that don't fit the Borel/Cartan pattern. For instance, $\text{GL}_2(\mathbb{F}_2) \cong S_3$ (order 6) has a richer subgroup lattice than larger cases. For $\ell \geq 5$ and non-CM curves, Serre's analysis shows the image is typically all of $\text{GL}_2(\mathbb{F}_\ell)$, with exceptions coming from the cases above.
+
+\subsection{Column C: Galois Image Type}
+
+A classification of the Galois representation:
+\begin{itemize}
+\item ``surjective'': $\text{im}(\rho_{E,\ell}) = \text{GL}_2(\mathbb{F}_\ell)$ for all $\ell$
+\item ``non-surjective at [list]'': Lists exceptional primes
+\item ``CM'': Curve has complex multiplication
+\end{itemize}
+
+CM curves are special:
+\begin{itemize}
+\item Over $\mathbb{Q}$, there are only 13 possible CM $j$-invariants, corresponding to imaginary quadratic fields of class number 1: discriminants $D \in \{-3, -4, -7, -8, -11, -12, -16, -19, -27, -28, -43, -67, -163\}$
+\item Galois representations are never surjective (image lies in normalizer of Cartan)
+\item L-functions have special values (related to Hecke characters)
+\item Heights are easier to compute
+\end{itemize}
+
+Examples in our table: Curves 27a1-27a4 have CM by $\mathbb{Z}[\omega]$ where $\omega = e^{2\pi i/3}$ (discriminant $-3$).
+
+\subsection{Column D: Index of $\Gamma_0(N)$ in $\text{SL}_2(\mathbb{Z})$}
+
+The \textbf{congruence subgroup} $\Gamma_0(N) \subset \text{SL}_2(\mathbb{Z})$ consists of matrices:
+$$\Gamma_0(N) = \left\{ \begin{pmatrix} a & b \\ c & d \end{pmatrix} \in \text{SL}_2(\mathbb{Z}) : c \equiv 0 \pmod{N} \right\}$$
+
+The index is:
+$$[\text{SL}_2(\mathbb{Z}) : \Gamma_0(N)] = N \prod_{p | N} \left(1 + \frac{1}{p}\right)$$
+
+Examples:
+\begin{itemize}
+\item $N = 11$ (prime): Index = $11 \cdot \frac{12}{11} = 12$
+\item $N = 15 = 3 \cdot 5$: Index = $15 \cdot \frac{4}{3} \cdot \frac{6}{5} = 24$
+\item $N = 1$ ($\Delta$): Index = 1 (since $\Gamma_0(1) = \text{SL}_2(\mathbb{Z})$)
+\end{itemize}
+
+\textbf{Why this matters}:
+
+\textbf{1. Modular forms perspective}: The dimension of the space of weight $k$ cusp forms grows like:
+$$\dim S_k(\Gamma_0(N)) \sim \frac{k-1}{12} [\text{SL}_2(\mathbb{Z}) : \Gamma_0(N)]$$
+for large $N$. Larger index means larger space of modular forms.
+
+\textbf{2. Representation theory}: The group $\Gamma_0(N)$ acts on the upper half-plane $\mathbb{H}$, and modular forms are functions on $\Gamma_0(N) \backslash \mathbb{H}$ with nice transformation properties. The index tells us:
+\begin{itemize}
+\item Size of the fundamental domain
+\item Number of coset representatives
+\item Complexity of Hecke operators
+\end{itemize}
+
+\textbf{3. Modularity}: The curve $E$ corresponds to a newform $f \in S_2(\Gamma_0(N))$. This newform is an eigenfunction for Hecke operators, and its Fourier coefficients $a_n$ encode arithmetic data about $E$. The level $N$ and index control:
+\begin{itemize}
+\item Which Hecke algebras act
+\item Congruences between modular forms
+\item Galois representations attached to $f$
+\end{itemize}
+
+\section{Table 4: Modular Curves and L-functions}
+
+\subsection{Column B: Genus of $X_0(N)$}
+
+The modular curve $X_0(N)$ is defined as:
+$$X_0(N) = \Gamma_0(N) \backslash (\mathbb{H} \cup \mathbb{P}^1(\mathbb{Q}))$$
+the compactification of the quotient of the upper half-plane by $\Gamma_0(N)$.
+
+As a Riemann surface, $X_0(N)$ has genus $g$ computed via Riemann-Hurwitz:
+$$g = 1 + \frac{[\text{SL}_2(\mathbb{Z}):\Gamma_0(N)]}{12} - \frac{\nu_2}{4} - \frac{\nu_3}{3} - \frac{\nu_\infty}{2}$$
+where $\nu_2, \nu_3$ count elliptic points and $\nu_\infty$ counts cusps.
+
+\textbf{Why genus matters}:
+
+\textbf{1. Dimension of modular forms}: For weight 2:
+$$\dim S_2(\Gamma_0(N)) = g \text{ for } N > 1$$
+
+Example: $X_0(37)$ has genus 2, so there are 2 independent weight-2 newforms. These correspond to curves 37a1 and 37b1.
+
+\textbf{2. Rational points}: The curve $X_0(N)$ itself is an algebraic curve over $\mathbb{Q}$. Its rational points $X_0(N)(\mathbb{Q})$ parametrize pairs $(E, C)$ where:
+\begin{itemize}
+\item $E$ is an elliptic curve over $\mathbb{Q}$
+\item $C \subset E$ is a cyclic subgroup of order $N$
+\end{itemize}
+
+By Mazur's theorem, for $N > 163$, we have $X_0(N)(\mathbb{Q}) = \{\text{cusps}\}$, so there are no non-cuspidal rational points.
+
+\textbf{3. Genus and complexity}:
+\begin{itemize}
+\item Genus 0: Rational curve (e.g., $X_0(1), X_0(2), \ldots, X_0(10)$)
+\item Genus 1: Elliptic curve (e.g., $X_0(11), X_0(14), X_0(15)$)
+\item Genus $\geq 2$: General type, Mordell conjecture (Faltings) applies
+\end{itemize}
+
+\subsection{Column C: Number of Cusps}
+
+Cusps are points added in compactification, corresponding to $\Gamma_0(N)$-orbits in $\mathbb{P}^1(\mathbb{Q})$. The count is:
+$$\#\{\text{cusps}\} = \sum_{d | N} \phi(\gcd(d, N/d))$$
+where $\phi$ is Euler's totient function.
+
+Examples:
+\begin{itemize}
+\item $N = 11$ (prime): 2 cusps
+\item $N = 30 = 2 \cdot 3 \cdot 5$: 12 cusps
+\item $N = 1$: 1 cusp (the point at $\infty$)
+\end{itemize}
+
+\textbf{Why cusps matter}:
+
+\textbf{1. Fourier expansions}: Modular forms have Fourier expansions at each cusp. A cusp form $f \in S_k(\Gamma_0(N))$ vanishes at all cusps, which imposes strong constraints.
+
+\textbf{2. Rational points}: Cusps are always rational points of $X_0(N)$, representing ``degenerate'' elliptic curves (nodal or cuspidal cubics).
+
+\textbf{3. Dimension formulas}: The genus formula involves the number of cusps, connecting topology to arithmetic.
+
+\subsection{Column D: Has Complex Multiplication?}
+
+As defined in Section 4.5, a curve has CM if $\text{End}_{\overline{\mathbb{Q}}}(E) \supsetneq \mathbb{Z}$.
+
+\textbf{Why modular form workers care about CM}:
+
+\textbf{1. Special L-values}: For CM curves, the L-function $L(E, s)$ factors as:
+$$L(E, s) = L(\psi, s)$$
+where $\psi$ is a Hecke character of the imaginary quadratic field. This connects to:
+\begin{itemize}
+\item Class field theory
+\item Algebraic Hecke characters
+\item Explicit formulas for special values
+\end{itemize}
+
+\textbf{2. Congruences}: CM forms often satisfy congruences with non-CM forms modulo small primes, leading to:
+\begin{itemize}
+\item Connections between different L-functions
+\item Iwasawa theory
+\item $p$-adic L-functions
+\end{itemize}
+
+\textbf{3. Explicit construction}: CM curves can be constructed explicitly via the theory of complex multiplication:
+\begin{itemize}
+\item Given discriminant $D$, construct $j$-invariant using modular functions
+\item Reduces to class field theory of imaginary quadratic fields
+\item Enables explicit computation of Fourier coefficients
+\end{itemize}
+
+\subsection{Column E: CM Discriminant}
+
+If $E$ has CM, this is the discriminant $D < 0$ of the imaginary quadratic order $\text{End}(E)$. Standard values: $D \in \{-3, -4, -7, -8, -11, -12, -16, \ldots\}$.
+
+Examples from table:
+\begin{itemize}
+\item Curves 27a1-27a4: $D = -3$ (CM by $\mathbb{Z}[\omega]$, $\omega^3 = 1$)
+\item Curves 32a1-32a4: $D = -4$ (CM by $\mathbb{Z}[i]$, $i^2 = -1$)
+\item Curves 49a1-49a4: $D = -7$ (CM by $\mathbb{Z}[\frac{1+\sqrt{-7}}{2}]$)
+\end{itemize}
+
+\textbf{Connection to class field theory}: The field $K = \mathbb{Q}(\sqrt{D})$ has class number $h_D$. The 13 discriminants mentioned earlier ($D = -3, -4, -7, -8, -11, -12, -16, -19, -27, -28, -43, -67, -163$) are exactly those with $h_D = 1$ (class number one). For these discriminants, the CM elliptic curves have rational $j$-invariants.
+
+\subsection{Column F: Root Number}
+
+The L-function of $E$ is:
+$$L(E, s) = \prod_{p \nmid N} \frac{1}{1 - a_p p^{-s} + p^{1-2s}} \cdot \prod_{p | N} L_p(E, p^{-s})$$
+where the second product accounts for bad primes.
+
+This has an analytic continuation to all $s \in \mathbb{C}$ and satisfies a functional equation:
+$$\Lambda(E, s) = w \cdot \Lambda(E, 2-s)$$
+where $\Lambda(E, s) = N^{s/2}(2\pi)^{-s}\Gamma(s) L(E, s)$ is the completed L-function, and $w \in \{+1, -1\}$ is the \textbf{root number}.
+
+\textbf{Why the root number matters}:
+
+\textbf{1. Birch and Swinnerton-Dyer conjecture}: The BSD conjecture predicts:
+$$w = (-1)^{r}$$
+where $r$ is the rank. Thus:
+\begin{itemize}
+\item $w = +1$ predicts even rank (including rank 0)
+\item $w = -1$ predicts odd rank (including rank 1)
+\end{itemize}
+
+In our table:
+\begin{itemize}
+\item 138 curves have $w = +1$ and rank 0 (consistent with BSD)
+\item 3 curves (37a1, 43a1, 53a1) have $w = -1$ and rank 1 (consistent with BSD)
+\end{itemize}
+
+\textbf{2. Representation theory}: The root number is a product of local signs:
+$$w = \prod_{p \leq \infty} w_p$$
+where each local factor $w_p = \pm 1$ encodes arithmetic data at $p$. For finite primes $p | N$:
+\begin{itemize}
+\item \textbf{Multiplicative reduction at $p$}: Typically $w_p = -1$ (``bad for parity'')
+\item \textbf{Additive reduction at $p$}: Typically $w_p = +1$ (``good for parity'')
+\end{itemize}
+
+\textbf{What does ``good/bad for parity'' mean?} Since $w = \prod_p w_p$ and we want to know the sign:
+\begin{itemize}
+\item Each $w_p = -1$ contributes a negative sign to the product
+\item If there's an \emph{odd} number of primes with $w_p = -1$, then $w = -1$ (predicting odd rank)
+\item If there's an \emph{even} number of primes with $w_p = -1$, then $w = +1$ (predicting even rank)
+\end{itemize}
+
+So ``bad for parity'' means $w_p = -1$ flips the sign, potentially changing even rank prediction to odd (or vice versa). ``Good for parity'' means $w_p = +1$ doesn't flip the sign.
+
+\textbf{3. Modular forms}: The root number relates to the Atkin-Lehner involution $W_N$ acting on $S_2(\Gamma_0(N))$:
+$$W_N: f(z) \mapsto \frac{1}{\sqrt{N}} f(-1/(Nz))$$
+
+The newform $f_E$ is an eigenfunction: $W_N(f_E) = w \cdot f_E$.
+
+\textbf{4. Deep connections}: Via the Modularity Theorem:
+\begin{itemize}
+\item Root number connects to Galois representations (via local Galois data)
+\item Relates to epsilon factors in Langlands program
+\item Appears in formulations of equivariant Tamagawa number conjectures
+\end{itemize}
+
+\section{Why Representation Theory Matters: A Summary}
+
+Throughout these tables, representation-theoretic data appears repeatedly. Why do modular form workers care so much about Galois representations?
+
+\subsection{The Langlands Program}
+
+The overarching framework is the \textbf{Langlands program}, which proposes deep connections between:
+\begin{itemize}
+\item \textbf{Automorphic side}: Modular forms, automorphic representations
+\item \textbf{Galois side}: Galois representations, motives
+\end{itemize}
+
+For elliptic curves, the Modularity Theorem is a special case: the curve $E$ (geometric object with Galois action) corresponds to the newform $f_E$ (analytic object with Hecke action).
+
+The Galois representation $\rho_{E,\ell}$ encodes how Galois acts on $\ell$-torsion, while the modular form $f_E$ encodes the same information through Fourier coefficients. The correspondence is:
+$$\text{tr}(\rho_{E,\ell}(\text{Frob}_p)) \equiv a_p \pmod{\ell}$$
+for primes $p \nmid \ell N$.
+
+\subsection{Local-Global Principle}
+
+Galois representations encode:
+\begin{itemize}
+\item \textbf{Global data}: Via $\rho_{E,\ell}: G_{\mathbb{Q}} \to \text{GL}_2(\mathbb{F}_\ell)$
+\item \textbf{Local data}: Via restrictions $\rho_{E,\ell}|_{G_{\mathbb{Q}_p}}$ for each prime $p$
+\end{itemize}
+
+The local data determines:
+\begin{itemize}
+\item Reduction type at $p$ (good, multiplicative, additive)
+\item Conductor exponent $f_p$ at $p$
+\item Local root number $w_p$
+\end{itemize}
+
+Modular forms see this same data through Fourier coefficients and Hecke eigenvalues. The representation-theoretic formulation unifies these perspectives.
+
+\subsection{Congruences and $p$-adic Theory}
+
+When two modular forms have congruent Fourier coefficients modulo a prime $p$, their associated Galois representations are congruent modulo $p$. This leads to:
+\begin{itemize}
+\item \textbf{Iwasawa theory}: Growth of Selmer groups in $\mathbb{Z}_p$-extensions
+\item \textbf{$p$-adic L-functions}: Interpolating special values $p$-adically
+\item \textbf{Bloch-Kato conjectures}: Relating regulators to $L$-values via $K$-theory
+\end{itemize}
+
+Understanding the Galois representation modulo $p$ is essential for these deep arithmetic applications.
+
+\subsection{Modularity Lifting}
+
+The proof of Fermat's Last Theorem (Wiles-Taylor) used \textbf{modularity lifting theorems}: given a Galois representation $\rho$ that looks modular mod $p$ (matches a modular form mod $p$), prove $\rho$ is modular (comes from a modular form over characteristic 0). This requires:
+\begin{itemize}
+\item Detailed control over Galois cohomology $H^1(G_{\mathbb{Q}}, \text{ad}^0(\rho))$
+\item Deformation theory of representations
+\item Understanding ramification and local conditions
+\end{itemize}
+
+The representation-theoretic data in Tables 2 and 3---exceptional primes, image structure, CM properties---is exactly the input needed for such theorems. To prove modularity of a Galois representation, one must understand:
+\begin{itemize}
+\item At which primes is it ramified? (Conductor)
+\item What is the local structure at ramified primes? (Reduction type)
+\item What are the irreducibility properties? (Image of $\rho$)
+\item Are there congruences with known modular forms? (Exceptional primes)
+\end{itemize}
+
+\section{Conclusion}
+
+These four tables encode a rich tapestry of connections between:
+\begin{itemize}
+\item Algebraic geometry (elliptic curves as varieties)
+\item Group theory (rational points as abelian groups)
+\item Complex analysis (modular forms as holomorphic functions)
+\item Representation theory (Galois representations)
+\item Number theory (L-functions, BSD conjecture)
+\end{itemize}
+
+For researchers in modular forms, the representation-theoretic perspective is not optional---it's the language in which modern number theory is written. The Galois representations provide:
+\begin{itemize}
+\item A unified framework (Langlands program)
+\item Computational tools (modularity, congruences)
+\item Deep conjectures (BSD, Bloch-Kato)
+\item Connections to other areas (arithmetic geometry, algebraic topology)
+\end{itemize}
+
+Even for those primarily interested in modular forms as analytic objects, understanding the associated Galois representations is essential for grasping the deeper arithmetic meaning of Fourier coefficients, Hecke eigenvalues, and L-functions.
+
+The data in these tables---conductor exponents, torsion structures, generator heights, exceptional primes, genus, root numbers---are not isolated curiosities but fundamental invariants that:
+\begin{itemize}
+\item Determine the structure of Galois representations
+\item Control dimensions of modular form spaces
+\item Predict ranks via the BSD conjecture
+\item Enable explicit computations of L-values
+\item Guide the search for rational points
+\end{itemize}
+
+Understanding what each column means, and why it matters, is the first step toward appreciating the profound unity underlying the arithmetic of elliptic curves.
+
+\end{document}
