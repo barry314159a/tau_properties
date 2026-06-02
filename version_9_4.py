@@ -1,4 +1,4 @@
-# SEGMENTED FOURIER ANALYSIS OF MINIMUM MODULI  (v9.4)
+# SEGMENTED FOURIER ANALYSIS OF MINIMUM MODULI  (v9.5)
 #
 # KEY CHANGE: Instead of fitting one curve to the entire dataset, the code
 # first detects breakpoints where the data's behavior changes (e.g., from
@@ -280,21 +280,17 @@ def analyze_segment(seg_indices, seg_values, seg_label):
             print(f"      {p:>6.1f}  {label:<12} ACF={strength:.4f}  {role}")
 
     # --- Verdict ---
-    # PERIODIC requires strong ACF evidence (strength > 0.5).
-    # FFT evidence alone is not sufficient — a single peak clearing the
-    # Bonferroni threshold in a noisy segment can be a false positive.
+    # Binary: PERIODIC or NOT PERIODIC.
+    # PERIODIC requires ACF strength > 0.5.  The FFT result is noted when
+    # it agrees but is never sufficient on its own — a single spectral peak
+    # can clear the Bonferroni threshold in a noisy segment by chance, and
+    # moderate ACF values (0.2–0.5) can arise from short-range noise
+    # correlation rather than genuine periodicity.
     if has_acf_evidence:
         verdict = "PERIODIC"
         verdict_detail = f"period {fund_period:.1f}, ACF strength {fund_strength:.4f}"
         if has_fft_evidence:
             verdict_detail += "  (confirmed by FFT)"
-    elif has_fft_evidence and fund_period is not None and fund_strength > 0.2:
-        verdict = "POSSIBLY PERIODIC"
-        verdict_detail = (f"FFT peak detected, ACF strength {fund_strength:.4f} "
-                         f"is moderate (needs > 0.5 for PERIODIC)")
-    elif fund_period is not None and 0.2 < fund_strength <= 0.5:
-        verdict = "POSSIBLY PERIODIC"
-        verdict_detail = f"candidate period {fund_period:.1f}, ACF strength {fund_strength:.4f}"
     else:
         verdict = "NOT PERIODIC"
         verdict_detail = ""
