@@ -280,13 +280,18 @@ def analyze_segment(seg_indices, seg_values, seg_label):
             print(f"      {p:>6.1f}  {label:<12} ACF={strength:.4f}  {role}")
 
     # --- Verdict ---
+    # PERIODIC requires strong ACF evidence (strength > 0.5).
+    # FFT evidence alone is not sufficient — a single peak clearing the
+    # Bonferroni threshold in a noisy segment can be a false positive.
     if has_acf_evidence:
         verdict = "PERIODIC"
         verdict_detail = f"period {fund_period:.1f}, ACF strength {fund_strength:.4f}"
-    elif has_fft_evidence:
-        verdict = "PERIODIC (FFT only)"
-        dominant = periods[significant_peaks[0][0]]
-        verdict_detail = f"dominant FFT period {dominant:.2f}"
+        if has_fft_evidence:
+            verdict_detail += "  (confirmed by FFT)"
+    elif has_fft_evidence and fund_period is not None and fund_strength > 0.2:
+        verdict = "POSSIBLY PERIODIC"
+        verdict_detail = (f"FFT peak detected, ACF strength {fund_strength:.4f} "
+                         f"is moderate (needs > 0.5 for PERIODIC)")
     elif fund_period is not None and 0.2 < fund_strength <= 0.5:
         verdict = "POSSIBLY PERIODIC"
         verdict_detail = f"candidate period {fund_period:.1f}, ACF strength {fund_strength:.4f}"
