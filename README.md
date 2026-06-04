@@ -1,1 +1,1 @@
-Repsitory for my draft article ``Ramanujan functions on small primes''.
+Repsitory for my draft article ``Oscillating spectra associated to certain sequences''.
