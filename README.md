@@ -1,1 +1,1 @@
-Repsitory for my draft article ``Oscillating spectra associated to certain sequences''.
+Repository for my draft article ``Oscillating spectra associated to certain sequences''.
