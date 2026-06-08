@@ -1,0 +1,117 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+
+\begin{document}
+
+\begin{center}
+  \textbf{\large Derivation of the deformed generating function
+  $H^{(c)}(t)=\dfrac{e^{ct}}{1-t^2}$}
+\end{center}
+
+\subsection*{Question}
+
+Take the sequence with $h_0 = 1$ and $h_r = 2$ for $r \ge 1$.  Its generating
+function is $H(t) = \frac{1+t}{1-t}$, which forces the paired sequence
+$j = (2,0,2,0,\dots)$.  The $c$-deformation prepends $c$ to $j$.  Working
+through equation~(D), show that the deformed generating function is
+\[
+  H^{(c)}(t) = \frac{e^{ct}}{1-t^2}.
+\]
+
+\subsection*{The relation (D)}
+
+Everything rests on equation~(D) written as a logarithmic derivative.  With
+$H(t) = \sum_{n\ge 0} h_n t^n$ and $J(t) = \sum_{r\ge 1} j_r t^r$, the
+following three statements are equivalent:
+\[
+  J(t) = t\,\frac{d}{dt}\log H(t),
+  \qquad
+  t H'(t) = H(t)\,J(t),
+  \qquad
+  n h_n = \sum_{r=1}^{n} j_r\, h_{n-r}\ \ (n \ge 1).
+\]
+The middle identity follows by matching the coefficient of $t^n$ on each
+side of the first; the third is that coefficient identity written out.
+
+\subsection*{Step 1: the base $J$}
+
+With $h_0 = 1$ and $h_r = 2$ for $r \ge 1$,
+\[
+  H(t) = 1 + 2\sum_{r\ge 1} t^r = 1 + \frac{2t}{1-t} = \frac{1+t}{1-t}.
+\]
+Hence
+\[
+  \frac{d}{dt}\log H(t)
+    = \frac{d}{dt}\bigl[\log(1+t) - \log(1-t)\bigr]
+    = \frac{1}{1+t} + \frac{1}{1-t}
+    = \frac{2}{1-t^2},
+\]
+and therefore
+\[
+  J(t) = t\cdot\frac{2}{1-t^2}
+       = \frac{2t}{1-t^2}
+       = 2t + 2t^3 + 2t^5 + \cdots,
+\]
+so that $j = (2,0,2,0,\dots)$, i.e. $j_r = 2$ for odd $r$ and $0$ for even $r$.
+
+\subsection*{Step 2: prepending $c$ to a generating function}
+
+The deformation sends a sequence $S = \{x_1, x_2, \dots\}$ to
+$S^{(c)} = \{c, x_1, x_2, \dots\}$: index $1$ becomes $c$, and each old entry
+$x_r$ moves to index $r+1$.  If $X(t) = \sum_{r\ge 1} x_r t^r$, then
+\[
+  X^{(c)}(t)
+    = c\,t + \sum_{r\ge 2} x_{r-1} t^{r}
+    = c\,t + t\sum_{s\ge 1} x_s t^{s}
+    = c\,t + t\,X(t).
+\]
+Applying this to $j$,
+\[
+  J^{(c)}(t) = c\,t + t\,J(t)
+             = c\,t + \frac{2t^2}{1-t^2}.
+\]
+
+\subsection*{Step 3: recover $H^{(c)}$ from $J^{(c)}$}
+
+The deformed sequence $h^{(c)}$ is the one paired with $j^{(c)}$ through the
+same relation~(D), so
+\[
+  \frac{d}{dt}\log H^{(c)}(t) = \frac{J^{(c)}(t)}{t} = c + \frac{2t}{1-t^2}.
+\]
+Integrating, and using $\displaystyle\int \frac{2t}{1-t^2}\,dt = -\log(1-t^2)$
+(substitute $u = 1-t^2$, $du = -2t\,dt$),
+\[
+  \log H^{(c)}(t) = c\,t - \log(1-t^2) + C.
+\]
+The constant $C$ is fixed by the normalization $h^{(c)}_0 = 1$, i.e.
+$H^{(c)}(0) = 1$, hence $\log H^{(c)}(0) = 0$.  Evaluating the right-hand side
+at $t = 0$ gives $C = 0$.  Exponentiating,
+\[
+  \boxed{\,H^{(c)}(t) = \frac{e^{ct}}{1-t^2}\,.}
+\]
+
+\subsection*{Remark on the integration constant}
+
+The antiderivative $\int \frac{2t}{1-t^2}\,dt$ is determined only up to the
+branch choice $-\log(1-t^2)$ versus $-\log(t^2-1)$, which differ by a
+constant and produce $e^{ct}/(1-t^2)$ versus $e^{ct}/(t^2-1)$.  These differ
+by an overall sign.  The boundary condition $H^{(c)}(0) = 1$ selects the
+former: at $t = 0$ it equals $+1$, whereas $e^{ct}/(t^2-1)$ equals $-1$.  A
+symbolic integrator that fixes its own constant of integration may return the
+second form; the physically correct branch is $e^{ct}/(1-t^2)$.
+
+\subsection*{Consistency check}
+
+One verifies directly that $H^{(c)}(t) = e^{ct}/(1-t^2)$ reproduces
+$J^{(c)}(t)$ through relation~(D):
+\[
+  t\,\frac{d}{dt}\log H^{(c)}(t)
+    = t\,\frac{d}{dt}\bigl[c\,t - \log(1-t^2)\bigr]
+    = t\left(c + \frac{2t}{1-t^2}\right)
+    = c\,t + \frac{2t^2}{1-t^2}
+    = J^{(c)}(t),
+\]
+as required.
+
+\end{document}
