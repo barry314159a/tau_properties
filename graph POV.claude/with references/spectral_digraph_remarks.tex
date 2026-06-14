@@ -1,0 +1,448 @@
+\documentclass[11pt, fleqn]{amsart}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  language=Python,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{red}
+}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\title{Spectral graph theory and the matrices $J_n(\overline{j})$, $H_n(\overline{h})$:
+remarks on the digraph viewpoint}
+\date{12 June 2026}
+
+\begin{document}
+\maketitle
+
+\noindent
+These remarks concern the two matrices defined after Lemma 2.1 of
+\emph{Oscillating spectra associated to certain sequences}, regarded as
+weighted adjacency matrices of directed graphs. The short answer is yes:
+spectral graph theory says quite a bit, and the directed-graph viewpoint
+fits these matrices unusually well. The remarks are organized from
+``structural'' to ``potentially useful for the $\mu_n$ project.''
+References to proofs of every result invoked are given inline, and
+Section~\ref{sec:guide} is an annotated guide to the bibliography
+intended for a reader with little background in spectral graph theory.
+
+\section{The digraph of $J_n$ has a very rigid cycle structure}
+
+Read $J_n(\overline{j})$ as the weighted adjacency matrix of a digraph on
+vertices $1,\dots,n$, with the convention that the entry $A_{uv}$ is the
+weight of the edge $u\to v$. (For the general dictionary between square
+matrices and weighted digraphs, see Brualdi and Cvetkovi\'c
+\cite{BC09}, the gentlest introduction we know, or Chapter~6 of Horn
+and Johnson \cite{HJ13}.) The superdiagonal gives a single
+``ascending'' path $i \to i+1$ with weight $-i$, and the lower-triangular
+Toeplitz part gives ``descending'' edges $i \to k$ ($k \le i$) with weight
+$j_{i-k+1}$, including loops of weight $j_1$. Because the \emph{only} way
+to ascend is one step at a time, every directed cycle is supported on an
+interval $[k,m]$: it climbs $k \to k+1 \to \cdots \to m$ and returns via
+the single edge $m \to k$. Its weight is
+\begin{equation}\label{eq:cycleweight}
+w([k,m]) \;=\; j_{m-k+1}\,(-1)^{m-k}\,\frac{(m-1)!}{(k-1)!}.
+\end{equation}
+
+\section{The coefficient theorem for digraphs reproves Theorem 2.3
+combinatorially}
+
+The \emph{coefficient theorem} for weighted digraphs --- in the
+graph-theory literature it is usually attributed to Sachs and appears,
+stated and proved for digraphs, in Chapter~1 of Cvetkovi\'c, Doob, and
+Sachs \cite{CDS95} --- says that the coefficient of $x^{n-r}$ in
+$\chi(J_n)$ is
+\[
+\sum_{L} (-1)^{c(L)}\, w(L),
+\]
+the sum running over collections $L$ of vertex-disjoint cycles covering
+$r$ vertices, where $c(L)$ is the number of cycles in $L$ and $w(L)$ is
+the product of the edge weights occurring in $L$. (The theorem is an
+unpacking of the Leibniz expansion of $\det(xI-A)$ via the cycle
+decomposition of permutations. Self-contained proofs accessible without
+graph-theoretic background may be found in Brualdi--Cvetkovi\'c
+\cite{BC09}, where determinants and characteristic polynomials are
+developed from the start in the language of weighted digraphs, and in
+Stanley \cite[\S 4.7]{Stanley12}, as the first step of the
+transfer-matrix method.)
+
+By the previous section, the relevant collections $L$ are exactly sets
+of pairwise disjoint intervals in $\{1,\dots,n\}$ --- that is, the
+coefficients are signed sums over partial composition-like structures,
+which is morally why partition and composition identities (MacDonald,
+Vein--Dale) appear at all in this setting.
+
+This was verified numerically (see the script in
+Section~\ref{sec:script}): for a random integer sequence $\overline{j}$
+with $j_1=1$ and $n=7$, the cycle-cover sums match both \texttt{numpy}'s
+characteristic polynomial and the formula of Theorem 2.3,
+\[
+\binom{n}{r}\, r!\, h_r\, (-1)^r,
+\]
+exactly.
+
+A corollary worth noting: for digraphs the spectrum depends \emph{only}
+on the multiset of cycle products. One direction is immediate from the
+coefficient theorem, since the coefficients of $\chi$ are assembled
+from cycle products alone. The deeper converse-type statement --- two
+matrices with the same digraph are diagonally similar if and only if
+all corresponding cycle products agree --- is a theorem of Saunders and
+Schneider \cite{SS78}; diagonal similarity is the matrix form of a
+``gauge transformation'' that reweights edges while preserving cycle
+products. Hence the interval weights \eqref{eq:cycleweight} are the
+complete intrinsic data behind the spectra under study. Any answer to
+the question ``what is it about $\chi(J_n)$ that induces the observed
+oscillations?'' must be expressible in terms of them.
+
+\section{Strong connectivity and its standard dividends}
+
+The digraph is strongly connected (one can ascend stepwise and descend
+in one hop), so $J_n$ is irreducible: the equivalence
+``irreducible $\Leftrightarrow$ strongly connected digraph'' is proved
+in \cite[Ch.~6]{HJ13} and in \cite[Ch.~2]{BP94}. Moreover, since the
+superdiagonal is nowhere zero, $J_n$ is an \emph{unreduced} Hessenberg
+matrix, hence nonderogatory --- every eigenvalue has geometric
+multiplicity $1$, and $\chi(J_n)$ coincides with the minimal
+polynomial. (Proof in one line: deleting the first column and last row
+of $J_n - \lambda I$ leaves an upper-triangular matrix with diagonal
+$-1, -2, \dots, -(n-1)$, which is nonsingular, so
+$\operatorname{rank}(J_n - \lambda I) \ge n-1$ for every $\lambda$. The
+standard treatment of unreduced Hessenberg matrices is Golub and Van
+Loan \cite[\S 7.4]{GVL13}.)
+
+Irreducibility upgrades the Ger\v{s}gorin disc theorem
+\cite{Ger31} via Taussky's theorem: an eigenvalue lying on the boundary
+of the union of the discs must lie on the boundary of \emph{every}
+disc. Taussky's original article is \cite{Taussky49}; modern proofs of
+both the disc theorem and Taussky's refinement appear in
+\cite[Ch.~6]{HJ13} and, with much more leisurely exposition, in
+Chapter~1 of Varga's book \cite{Varga04}, which is devoted entirely to
+this circle of ideas and is written to be readable without prior
+background. More interestingly, Brualdi's cycle-based refinement of
+Ger\v{s}gorin is spectral graph theory tailor-made for the present
+situation: it localizes eigenvalues using products of deleted row sums
+taken \emph{around directed cycles} of the digraph, and here the cycles
+are exactly the intervals described above. Brualdi's theorem, with
+proof, is in his original paper \cite{Brualdi82}; a textbook proof,
+together with comparisons against the classical discs and Brauer's
+ovals of Cassini, is in Chapter~2 of \cite{Varga04}.
+
+\section{The Ger\v{s}gorin picture explains, geometrically, what
+deformation does}
+
+Every diagonal entry of $J_n$ equals $j_1$, so all Ger\v{s}gorin discs
+share one center. Deformation by $c$ replaces every loop weight by $c$
+(and shifts the descending-edge weights), so it translates the common
+disc center to $c$ while reorganizing the radii. In graph language,
+deformation is a uniform reweighting of the loops --- the spectrum is
+pinned to circulate around $c$. This gives at least a heuristic for why
+the deformed spectra look more regular: the eigenvalues live in an
+annulus-like region about a fixed center, and $\mu_n$ measures the
+distance from $0$ to a cloud orbiting $c$.
+
+\section{A concrete lever for bounding $\mu_n$ away from zero}
+
+Since the determinant is the product of the eigenvalues (with
+multiplicity),
+\[
+\prod_i |\lambda_i| \;=\; |\det J_n| \;=\; n!\,|h_n|,
+\]
+any upper bound $\rho$ on the spectral radius coming from the graph
+(Ger\v{s}gorin row sums in terms of the $j$'s --- see
+\cite[Ch.~6]{HJ13} or \cite[Ch.~1]{Varga04} --- or Brualdi's cycle
+bounds \cite{Brualdi82}) yields
+\[
+\mu_n \;\ge\; \frac{n!\,|h_n|}{\rho^{\,n-1}}.
+\]
+This is exactly the shape of statement the project wants --- it reduces
+``the spectrum is zero-free'' to controlling the top of the spectrum
+graph-theoretically, plus knowing $h_n \neq 0$. For the Lehmer
+application the logic unfortunately runs the wrong way ($h_n \neq 0$ is
+the desired conclusion, not a hypothesis). Still, for the deformed
+matrices, where only zero-freeness is needed, it is potentially usable.
+
+\section{Caveats, and the matrix $H_n$}
+
+One important caveat: the classical heavy machinery of spectral graph
+theory assumes nonnegative or symmetric matrices. The
+Perron--Frobenius theorem (proved in \cite[Ch.~8]{HJ13}, in
+\cite[Ch.~2]{BP94}, and --- in what is perhaps the most readable
+account --- in Chapter~8 of Meyer \cite{Meyer00}) requires nonnegative
+entries; eigenvalue interlacing and its many graph-theoretic
+consequences (see \cite[\S 4.3]{HJ13} for the matrix statement, or
+Brouwer and Haemers \cite{BH12} for the spectral-graph-theory
+applications) require symmetry. The weights here are signed and the
+matrices are far from normal, so the spectra are genuinely complex
+point sets and those tools do not apply. What survives is exactly the
+digraph toolkit above: the coefficient theorem, irreducibility, and
+cycle-based inclusion regions.
+
+Everything said for $J_n$ transfers to $H_n(\overline{h})$ with the
+obvious changes: the superdiagonal weights are all $+1$, and the
+first-column edges $i \to 1$ carry weight $i\,h_i$. Consequently the
+cycles of the $H_n$ digraph are the loops, the intervals $[k,m]$ with
+$k \ge 2$, and the intervals $[1,m]$, the last carrying the extra
+factor $m$.
+
+\section{Guide to the references}\label{sec:guide}
+
+For a reader new to spectral graph theory we suggest the following
+order. References below are given at the chapter or section level
+rather than by theorem number, since numbering differs between
+editions.
+
+\emph{Start here.} Brualdi--Cvetkovi\'c \cite{BC09} develops elementary
+matrix theory (determinants, characteristic polynomials,
+Cayley--Hamilton) entirely through weighted digraphs and cycle covers,
+assuming only linear algebra; it contains everything needed for
+Sections 1--2 of these remarks, with proofs. Stanley
+\cite[\S 4.7]{Stanley12} gives a compact alternative proof of the
+cycle-cover expansion as part of the transfer-matrix method.
+
+\emph{The eigenvalue-inclusion world.} Varga \cite{Varga04} is a short,
+self-contained book devoted to Ger\v{s}gorin-type theorems: Chapter~1
+proves the disc theorem and Taussky's boundary refinement, and
+Chapter~2 proves Brualdi's cycle-based inclusion sets used above. The
+original sources are Ger\v{s}gorin \cite{Ger31}, Taussky
+\cite{Taussky49}, and Brualdi \cite{Brualdi82}; Brualdi's paper is also
+the best place to see how the digraph cycle structure enters the
+proofs.
+
+\emph{Standard references.} Horn--Johnson \cite{HJ13} (already cited in
+the main paper for Proposition 2.4 there) contains proofs of every
+matrix-theoretic fact we used: Ger\v{s}gorin, Taussky, and
+irreducibility in Chapter~6, interlacing in \S 4.3, Perron--Frobenius
+in Chapter~8. Golub--Van Loan \cite[\S 7.4]{GVL13} covers unreduced
+Hessenberg matrices. Berman--Plemmons \cite{BP94} and Meyer
+\cite{Meyer00} are alternatives for Perron--Frobenius and
+irreducibility, Meyer being the gentlest.
+
+\emph{Spectral graph theory proper.} Cvetkovi\'c--Doob--Sachs
+\cite{CDS95} is the classical monograph; its Chapter~1 contains the
+coefficient theorem for digraphs with proof. Brouwer--Haemers
+\cite{BH12} (freely available from the authors' web pages) is a modern,
+readable account of the symmetric/undirected theory --- useful
+background, with the caveat that most of it does not apply to the
+signed, nonsymmetric matrices studied here. Saunders--Schneider
+\cite{SS78} proves the equivalence between diagonal similarity and
+equality of cycle products.
+
+\section{The Python verification script}\label{sec:script}
+
+The following script (i) builds $J_n(\overline{j})$ for a random
+integer sequence with $j_1 = 1$; (ii) computes its characteristic
+polynomial with \texttt{numpy}; (iii) recomputes the coefficients from
+the digraph coefficient theorem, enumerating all sets of pairwise
+disjoint intervals and using the cycle weights
+\eqref{eq:cycleweight}; and (iv) compares both against the formula of
+Theorem 2.3, with $h$ recovered from $j$ via equation (D1). All three
+computations agree.
+
+\begin{lstlisting}
+import numpy as np
+import random
+from math import comb, factorial
+
+random.seed(1)
+n = 7
+# random integer j-sequence with j_1 = 1 (as in Lemma 2.2)
+j = [None, 1] + [random.randint(-4, 4) for _ in range(2, n + 1)]  # j[1..n]
+
+# Build J_n(jbar): lower part Toeplitz j_{i-k+1}, superdiagonal -i
+J = np.zeros((n, n))
+for i in range(1, n + 1):
+    for k in range(1, n + 1):
+        if k <= i:
+            J[i - 1, k - 1] = j[i - k + 1]
+        elif k == i + 1:
+            J[i - 1, k - 1] = -i
+
+# Characteristic polynomial via numpy:
+# coefficients of x^n + a_1 x^{n-1} + ...
+cp_numeric = np.poly(J)
+
+# --- digraph coefficient theorem ---
+# Cycles of the digraph = intervals [k,m]:
+#   weight = j_{m-k+1} * (-1)^(m-k) * (m-1)!/(k-1)!
+def cycle_weight(k, m):
+    return j[m - k + 1] * ((-1) ** (m - k)) * factorial(m - 1) // factorial(k - 1)
+
+# Coefficient of x^{n-r}: sum over sets of disjoint intervals
+# covering r vertices, with sign (-1)^{#cycles}  (det(xI - A) convention)
+intervals = [(k, m) for k in range(1, n + 1) for m in range(k, n + 1)]
+
+def disjoint_sets(ivs):
+    """Enumerate all sets of pairwise disjoint intervals."""
+    out = [[]]
+    def rec(start, chosen):
+        for idx in range(start, len(ivs)):
+            iv = ivs[idx]
+            if all(iv[0] > c[1] or iv[1] < c[0] for c in chosen):
+                chosen.append(iv)
+                out.append(list(chosen))
+                rec(idx + 1, chosen)
+                chosen.pop()
+    rec(0, [])
+    return out
+
+coeffs = [0] * (n + 1)  # coeffs[r] multiplies x^{n-r}
+coeffs[0] = 1
+for S in disjoint_sets(intervals):
+    if not S:
+        continue
+    r = sum(m - k + 1 for k, m in S)
+    w = 1
+    for k, m in S:
+        w *= cycle_weight(k, m)
+    coeffs[r] += ((-1) ** len(S)) * w
+
+print("numpy char poly coeffs:    ", np.round(cp_numeric, 6))
+print("digraph cycle-cover coeffs:", coeffs)
+print("match:", np.allclose(cp_numeric, coeffs))
+
+# --- confirm these equal Theorem 2.3's binom(n,r) r! h_r (-1)^r,
+#     with h recovered from j via equation (D1) ---
+h = [1]
+for m in range(1, n + 1):
+    s = sum(j[r] * h[m - r] for r in range(1, m + 1))
+    h.append(s / m)
+thm = [comb(n, r) * factorial(r) * h[r] * (-1) ** r for r in range(n + 1)]
+print("Theorem 2.3 coeffs:        ", thm)
+\end{lstlisting}
+
+\noindent
+Output for the seeded run ($n = 7$):
+\begin{lstlisting}[language={}]
+numpy char poly coeffs:     [ 1. -7. -21. 385. -805. -609. 6433. -8041.]
+digraph cycle-cover coeffs: [1, -7, -21, 385, -805, -609, 6433, -8041]
+match: True
+Theorem 2.3 coeffs:         [1, -7.0, -21.0, 385.0, -805.0, -609.0,
+                             6433.0, -8041.0]
+\end{lstlisting}
+
+\begin{thebibliography}{99}
+
+\bibitem{BP94}
+A.~Berman and R.~J. Plemmons,
+\emph{Nonnegative Matrices in the Mathematical Sciences},
+Classics in Applied Mathematics 9, SIAM, Philadelphia, 1994.
+[Chapter~2 proves the Perron--Frobenius theorem and the equivalence of
+irreducibility with strong connectivity of the digraph.]
+
+\bibitem{BH12}
+A.~E. Brouwer and W.~H. Haemers,
+\emph{Spectra of Graphs},
+Universitext, Springer, New York, 2012.
+[A readable modern account of spectral graph theory for symmetric
+(undirected) adjacency matrices, including Perron--Frobenius and
+eigenvalue interlacing with proofs; freely available from the authors'
+web pages.]
+
+\bibitem{Brualdi82}
+R.~A. Brualdi,
+Matrices, eigenvalues, and directed graphs,
+\emph{Linear and Multilinear Algebra} \textbf{11} (1982), 143--165.
+[Original proof of the cycle-based refinement of the Ger\v{s}gorin disc
+theorem used in these remarks; the digraph structure of the matrix
+enters the proof directly.]
+
+\bibitem{BC09}
+R.~A. Brualdi and D.~Cvetkovi\'c,
+\emph{A Combinatorial Approach to Matrix Theory and Its Applications},
+Discrete Mathematics and Its Applications, CRC Press, Boca Raton, 2009.
+[Develops determinants, characteristic polynomials, and the
+Cayley--Hamilton theorem from scratch in the language of weighted
+digraphs and cycle covers. The most accessible source for the
+coefficient theorem; assumes only elementary linear algebra.]
+
+\bibitem{CDS95}
+D.~Cvetkovi\'c, M.~Doob, and H.~Sachs,
+\emph{Spectra of Graphs: Theory and Applications},
+3rd ed., Johann Ambrosius Barth, Heidelberg, 1995.
+[The classical monograph on graph spectra. Chapter~1 states and proves
+the coefficient theorem for the characteristic polynomial of a weighted
+digraph, the form used in these remarks.]
+
+\bibitem{Ger31}
+S.~Ger\v{s}gorin,
+\"Uber die Abgrenzung der Eigenwerte einer Matrix,
+\emph{Izv. Akad. Nauk SSSR, Ser. Mat.} \textbf{7} (1931), 749--754.
+[The original disc theorem; cited for history --- modern proofs are in
+\cite{HJ13} and \cite{Varga04}.]
+
+\bibitem{GVL13}
+G.~H. Golub and C.~F. Van Loan,
+\emph{Matrix Computations},
+4th ed., Johns Hopkins University Press, Baltimore, 2013.
+[Section 7.4 treats unreduced Hessenberg matrices, including the rank
+argument showing every eigenvalue has geometric multiplicity one.]
+
+\bibitem{HJ13}
+R.~A. Horn and C.~R. Johnson,
+\emph{Matrix Analysis},
+2nd ed., Cambridge University Press, Cambridge, 2013.
+[The standard reference. Chapter~6 proves the Ger\v{s}gorin disc
+theorem, Taussky's boundary refinement, and the equivalence of
+irreducibility with strong connectivity; \S 4.3 proves Cauchy
+interlacing for Hermitian matrices; Chapter~8 proves Perron--Frobenius.
+This is the same book cited as Horn and Johnson in the main paper.]
+
+\bibitem{Meyer00}
+C.~D. Meyer,
+\emph{Matrix Analysis and Applied Linear Algebra},
+SIAM, Philadelphia, 2000.
+[Chapter~8 contains what is perhaps the most readable proof of the
+Perron--Frobenius theorem, together with the digraph characterization
+of irreducibility.]
+
+\bibitem{SS78}
+B.~D. Saunders and H.~Schneider,
+Flows on graphs applied to diagonal similarity and diagonal equivalence
+for matrices,
+\emph{Discrete Math.} \textbf{24} (1978), 205--220.
+[Proves that two matrices supported on the same digraph are diagonally
+similar if and only if corresponding cycle products are equal --- the
+precise sense in which the cycle weights \eqref{eq:cycleweight} are the
+complete intrinsic spectral data.]
+
+\bibitem{Stanley12}
+R.~P. Stanley,
+\emph{Enumerative Combinatorics, Volume 1},
+2nd ed., Cambridge Studies in Advanced Mathematics 49,
+Cambridge University Press, Cambridge, 2012.
+[Section 4.7 (the transfer-matrix method) contains a short
+self-contained proof of the cycle-cover expansion of $\det(I - xA)$,
+equivalent to the coefficient theorem.]
+
+\bibitem{Taussky49}
+O.~Taussky,
+A recurring theorem on determinants,
+\emph{Amer. Math. Monthly} \textbf{56} (1949), 672--676.
+[Source of the boundary refinement of Ger\v{s}gorin for irreducible
+matrices.]
+
+\bibitem{Varga04}
+R.~S. Varga,
+\emph{Ger\v{s}gorin and His Circles},
+Springer Series in Computational Mathematics 36, Springer, Berlin, 2004.
+[A short book devoted entirely to eigenvalue-inclusion theorems,
+written to be self-contained. Chapter~1 proves the disc theorem and
+Taussky's theorem; Chapter~2 proves Brualdi's cycle-based inclusion
+sets. Recommended as the main reference for a reader new to this
+material.]
+
+\end{thebibliography}
+
+\end{document}
