@@ -1,0 +1,204 @@
+\documentclass[11pt, fleqn]{amsart}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\title{Asymptotics of the deformed coefficients $h^{(c)}_m$}
+\author{}
+\date{13 June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We give a self-contained analytic derivation of the large-$m$ behavior of the
+coefficients $h^{(c)}_m$ defined by the deformed generating function
+$H^{(c)}(t)=e^{ct}/(1-t^2)$. The only input is the closed form on the unit disc;
+no individual coefficient is computed and no numerical evidence is invoked. We
+obtain an exact formula for $h^{(c)}_m$, an explicit bound on the error in the
+limiting expression, and the parity-split limits $\cosh c$ and $\sinh c$.
+\end{abstract}
+
+\section{Setup and notation}
+Fix $c\in\mathbb{C}$. We take as our single starting point the identity, valid
+as an equality of analytic functions on the open unit disc $\{\,t\in\mathbb{C}:|t|<1\,\}$,
+\begin{equation}
+H^{(c)}(t)\;=\;\frac{e^{ct}}{1-t^2}\;=\;\sum_{m=0}^{\infty}h^{(c)}_m\,t^m.
+\tag{1}
+\end{equation}
+This is what equation~(D) produces for the constant sequence after deformation:
+solving $\frac{d}{dt}\log H^{(c)}(t)=c+\frac{2t}{1-t^2}$ with $H^{(c)}(0)=1$ yields
+$\log H^{(c)}(t)=ct-\log(1-t^2)$ on a neighborhood of $t=0$, hence $(1)$, and the
+two sides, being analytic on the unit disc, agree throughout it. The numbers
+$h^{(c)}_m$ are exactly the Taylor coefficients in $(1)$; their large-$m$ behavior
+is the object of study. Nothing below uses the value of any particular
+$h^{(c)}_m$.
+
+For $z\in\mathbb{C}$ and $m\ge 0$ write
+\[
+E_m(z)\;=\;\sum_{k=0}^{m}\frac{z^{k}}{k!},
+\qquad
+R_m(z)\;=\;e^{z}-E_m(z)\;=\;\sum_{k=m+1}^{\infty}\frac{z^{k}}{k!},
+\]
+so that $E_m(z)$ is the $m$-th Taylor polynomial of $\exp$ at $0$ and $R_m(z)$ is
+its remainder.
+
+\section{An exact formula for the coefficients}
+
+\begin{lemma}\label{lem:exact}
+For every $c\in\mathbb{C}$ and every $m\ge 0$,
+\[
+h^{(c)}_m\;=\;\tfrac12\,E_m(c)\;+\;\tfrac{(-1)^m}{2}\,E_m(-c).
+\]
+\end{lemma}
+
+\begin{proof}
+The partial-fraction identity
+\[
+\frac{1}{1-t^2}\;=\;\frac12\!\left(\frac{1}{1-t}+\frac{1}{1+t}\right),
+\]
+an equality of rational functions on $\mathbb{C}\setminus\{\pm1\}$, gives on the
+disc $|t|<1$
+\[
+H^{(c)}(t)\;=\;\frac12\,\frac{e^{ct}}{1-t}\;+\;\frac12\,\frac{e^{ct}}{1+t}.
+\]
+For $|t|<1$ the exponential series $e^{ct}=\sum_{k\ge0}\frac{c^k}{k!}t^k$ converges
+absolutely (it is entire), and the geometric series
+$\frac{1}{1\mp t}=\sum_{i\ge0}(\pm1)^{i}t^{i}$ converges absolutely. The product of
+two absolutely convergent power series is represented on the common disc of
+convergence by their Cauchy product, which again converges absolutely; hence the
+coefficient of $t^m$ may be read off as a finite convolution. Thus
+\[
+[t^m]\,\frac{e^{ct}}{1-t}=\sum_{k=0}^{m}\frac{c^{k}}{k!}=E_m(c),
+\]
+\[
+[t^m]\,\frac{e^{ct}}{1+t}=\sum_{k=0}^{m}\frac{c^{k}}{k!}\,(-1)^{m-k}
+=(-1)^m\sum_{k=0}^{m}\frac{(-c)^{k}}{k!}=(-1)^m E_m(-c).
+\]
+Since the Taylor coefficients of the analytic function $H^{(c)}$ are unique,
+comparison with $(1)$ yields the stated identity.
+\end{proof}
+
+\section{A tail estimate for the exponential}
+
+\begin{lemma}\label{lem:tail}
+For every $z\in\mathbb{C}$ and every $m\ge 0$,
+\[
+\bigl|R_m(z)\bigr|\;=\;\bigl|e^{z}-E_m(z)\bigr|\;\le\;\frac{|z|^{\,m+1}}{(m+1)!}\,e^{|z|}.
+\]
+\end{lemma}
+
+\begin{proof}
+Estimating the tail term by term,
+\[
+\bigl|R_m(z)\bigr|\;\le\;\sum_{k=m+1}^{\infty}\frac{|z|^{k}}{k!}
+\;=\;\frac{|z|^{\,m+1}}{(m+1)!}\sum_{j=0}^{\infty}\frac{(m+1)!}{(m+1+j)!}\,|z|^{\,j}.
+\]
+For each $j\ge0$,
+\[
+\frac{(m+1)!\,j!}{(m+1+j)!}\;=\;\binom{m+1+j}{j}^{-1}\;\le\;1,
+\qquad\text{so}\qquad
+\frac{(m+1)!}{(m+1+j)!}\;\le\;\frac{1}{j!}.
+\]
+Therefore
+\[
+\bigl|R_m(z)\bigr|\;\le\;\frac{|z|^{\,m+1}}{(m+1)!}\sum_{j=0}^{\infty}\frac{|z|^{\,j}}{j!}
+\;=\;\frac{|z|^{\,m+1}}{(m+1)!}\,e^{|z|}. \qedhere
+\]
+\end{proof}
+
+\section{The asymptotics}
+
+\begin{theorem}\label{thm:main}
+For every $c\in\mathbb{C}$ and every $m\ge0$,
+\[
+h^{(c)}_m\;=\;\frac{e^{c}+(-1)^m e^{-c}}{2}\;+\;\varepsilon_m(c),
+\qquad
+\bigl|\varepsilon_m(c)\bigr|\;\le\;\frac{|c|^{\,m+1}}{(m+1)!}\,e^{|c|}.
+\]
+Consequently $\varepsilon_m(c)\to0$ as $m\to\infty$, faster than any geometric
+sequence, and
+\[
+\lim_{\substack{m\to\infty\\ m\ \mathrm{even}}}h^{(c)}_m=\frac{e^{c}+e^{-c}}{2}=\cosh c,
+\qquad
+\lim_{\substack{m\to\infty\\ m\ \mathrm{odd}}}h^{(c)}_m=\frac{e^{c}-e^{-c}}{2}=\sinh c.
+\]
+\end{theorem}
+
+\begin{proof}
+Substitute $E_m(\pm c)=e^{\pm c}-R_m(\pm c)$ into Lemma~\ref{lem:exact}:
+\begin{align*}
+h^{(c)}_m
+&=\tfrac12\bigl(e^{c}-R_m(c)\bigr)+\tfrac{(-1)^m}{2}\bigl(e^{-c}-R_m(-c)\bigr)\\
+&=\frac{e^{c}+(-1)^m e^{-c}}{2}\;-\;\tfrac12\bigl(R_m(c)+(-1)^m R_m(-c)\bigr).
+\end{align*}
+Define $\varepsilon_m(c)=-\tfrac12\bigl(R_m(c)+(-1)^m R_m(-c)\bigr)$. Because
+$|{-c}|=|c|$, Lemma~\ref{lem:tail} bounds each of $|R_m(c)|$ and $|R_m(-c)|$ by
+$\dfrac{|c|^{\,m+1}}{(m+1)!}\,e^{|c|}$, so
+\[
+\bigl|\varepsilon_m(c)\bigr|\le\tfrac12\bigl(|R_m(c)|+|R_m(-c)|\bigr)
+\le\frac{|c|^{\,m+1}}{(m+1)!}\,e^{|c|}.
+\]
+The quantity $|c|^{m+1}/(m+1)!$ is the general term of the convergent series for
+$e^{|c|}$, so it tends to $0$; moreover
+\[
+\frac{|c|^{\,m+2}/(m+2)!}{|c|^{\,m+1}/(m+1)!}=\frac{|c|}{m+2}\xrightarrow[m\to\infty]{}0,
+\]
+which is the meaning of ``faster than any geometric sequence.'' Fixing the parity
+of $m$ makes $(-1)^m$ constant, and letting $m\to\infty$ through that parity class
+sends $\varepsilon_m(c)\to0$, giving the two limits.
+\end{proof}
+
+\begin{corollary}[the case $c=1$]\label{cor:c1}
+For $c=1$,
+\[
+h^{(1)}_m=\frac{e+(-1)^m e^{-1}}{2}+\varepsilon_m,
+\qquad |\varepsilon_m|\le\frac{e}{(m+1)!},
+\]
+so $h^{(1)}_m\to\cosh 1=\dfrac{e}{2}+\dfrac{1}{2e}$ over even $m$ and
+$h^{(1)}_m\to\sinh 1=\dfrac{e}{2}-\dfrac{1}{2e}$ over odd $m$.
+\end{corollary}
+
+\begin{proof}
+Set $c=1$ in Theorem~\ref{thm:main}; then $|c|=1$ gives the bound
+$\dfrac{1^{\,m+1}}{(m+1)!}\,e^{1}=\dfrac{e}{(m+1)!}$, and
+$\tfrac12(e\pm e^{-1})=\cosh1$ or $\sinh1$ according to parity.
+\end{proof}
+
+\section{Remarks}
+
+\begin{remark}[which pole supplies what]
+The decomposition in Lemma~\ref{lem:exact} separates the two simple poles of
+$H^{(c)}$ at $t=\pm1$. The pole at $t=+1$ contributes the parity-independent term
+$e^{c}/2$ (the limit of $E_m(c)$); the pole at $t=-1$ contributes the alternating
+term $(-1)^m e^{-c}/2$. The alternation $(-1)^m$, and hence the splitting of the
+limit into the two distinct values $\cosh c$ and $\sinh c$, is produced solely by
+the \emph{location} $t=-1$ of the second pole and is independent of $c$. The
+parameter $c$ enters only through the numerator $e^{ct}$ and therefore fixes
+nothing but the two residue magnitudes $e^{\pm c}/2$.
+\end{remark}
+
+\begin{remark}[independence from numerics]
+Every assertion follows from $(1)$ together with the elementary
+Lemmas~\ref{lem:exact} and~\ref{lem:tail}. In particular the limit is not an
+extrapolation from computed coefficients: for each finite $m$ the deviation of
+$h^{(c)}_m$ from $\tfrac12\bigl(e^{c}+(-1)^m e^{-c}\bigr)$ is bounded explicitly by
+$\dfrac{|c|^{\,m+1}}{(m+1)!}\,e^{|c|}$.
+\end{remark}
+
+\begin{remark}[consistency with the small-$t$ derivation]
+The identity $(1)$ is established on a neighborhood of $t=0$, and the asymptotics
+are extracted without ever evaluating $H^{(c)}$ at or near the poles. The geometric
+expansions $\frac{1}{1\mp t}=\sum_{i\ge0}(\pm1)^i t^i$ used in
+Lemma~\ref{lem:exact} converge on exactly the disc $|t|<1$ on which $(1)$ holds.
+Thus the whole argument takes place inside the region where the derivation of
+$(1)$ is valid; the role of the poles at $t=\pm1$ is only to mark the boundary
+$|t|=1$ of that disc, which is where the coefficient asymptotics are governed.
+\end{remark}
+
+\end{document}

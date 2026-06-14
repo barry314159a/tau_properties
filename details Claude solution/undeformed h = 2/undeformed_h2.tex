@@ -1,0 +1,320 @@
+\documentclass[11pt, fleqn]{amsart}
+\usepackage{amsmath, amssymb, amsthm} 
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{tikz-cd}
+% Code listing packages (for the Key to Tables section)
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  language=Python,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{red}}
+% Theorem environment setup
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{proposition}{Proposition}
+\newtheorem*{proposition*}{Proposition}
+\newtheorem{observation}{Observation}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+% Title and authorship
+\title
+{Details of the undeformed $h=2$ argument: a non-oscillating companion}
+\author{Barry Brent}
+\email{axcjh@bu.edu}
+\subjclass[2020]{05A17, 05C62, 11F11, 11P83}
+\keywords{partitions, graphs, cusp forms}
+\begin{document}
+\maketitle
+\vspace{-0.5em}
+\begin{center}
+    %rm
+    {14 June 2026}
+\end{center}
+\vspace{1em}
+Say $h_0 = 1$ and $h_n = 2$ for $n$ positive. This is the companion of the deformed
+calculation: here we make \emph{no} deformation, introduce no parameter $c$, and study
+the coefficients $h_n$ themselves. From Lemma 2.1, with
+$H(t) = \sum_{n\ge 0} h_n t^n$ and $J(t) = \sum_{r\ge 1} j_r t^r$,
+the following statements are equivalent:
+\newline
+\newline
+(i) $
+  t H'(t) = H(t)\,J(t),
+$ \newline
+(ii) $
+  n h_n = \sum_{r=1}^{n} j_r\, h_{n-r}\ \ (n \ge 1).
+$ \newline \newline
+From (a), we also have \newline
+(iii)
+$
+  J(t) = t\,\frac{d}{dt}\log H(t).
+$
+\newline
+\newline
+With $h_0 = 1$ and $h_r = 2$ for $r \ge 1$, summing the geometric series gives the
+closed form
+$$
+  H(t) = 1 + 2\sum_{r\ge 1} t^r = 1 + \frac{2t}{1-t} = \frac{1+t}{1-t}.
+$$
+This is the object of study below. For comparison with the deformed family we record
+that
+$$
+  \frac{d}{dt}\log H(t)
+    = \frac{d}{dt}\bigl(\log(1+t) - \log(1-t)\bigr)
+    = \frac{1}{1+t} + \frac{1}{1-t}
+    = \frac{2}{1-t^2},
+$$
+so $J(t) = t\cdot\dfrac{2}{1-t^2} = 2t + 2t^3 + 2t^5 + \cdots$, i.e.\ $j_r = 2$ for odd
+$r$ and $j_r = 0$ for even $r$. The deformed analysis prepends a parameter $c$ to this
+$j$-sequence and arrives at $H^{(c)}(t)=e^{ct}/(1-t^2)$; the present note keeps $J$ as
+it is and analyses $H(t)=(1+t)/(1-t)$ directly. We will see that the two differ in
+exactly one structural respect --- the singularity at $t=-1$ --- and that this single
+difference is the whole of the oscillation phenomenon.
+
+\medskip
+
+We give a self-contained analytic derivation of the large-$n$ behavior of the
+coefficients $h_n$ of the undeformed generating function $H(t)=(1+t)/(1-t)$. The only
+input is the closed form on the unit disc; no individual coefficient is computed and no
+numerical evidence is invoked. We obtain an exact formula for $h_n$, show that the
+sequence is \emph{eventually exactly constant} rather than merely convergent, and obtain
+the single limit $2$ with no parity splitting. A closing section compares this with the
+deformed family $H^{(c)}(t)=e^{ct}/(1-t^2)$, whose coefficients split into $\cosh c$ and
+$\sinh c$, and isolates the simple pole at $t=-1$ as the unique source of that
+oscillation.
+
+\section{Setup and notation}
+We take as our single starting point the identity, valid as an equality of analytic
+functions on the open unit disc $\{\,t\in\mathbb{C}:|t|<1\,\}$,
+\begin{equation}
+H(t)\;=\;\frac{1+t}{1-t}\;=\;\sum_{n=0}^{\infty}h_n\,t^n.
+\tag{1}
+\end{equation}
+This is what equation~(D) produces for the constant sequence $h_0=1,\ h_n=2\ (n\ge1)$
+\emph{before any deformation}: summing the geometric series gives the rational function
+on the left, and the two sides, being analytic on the unit disc, agree throughout it.
+The numbers $h_n$ are exactly the Taylor coefficients in $(1)$; their large-$n$ behavior
+is the object of study. Nothing below uses the value of any particular $h_n$.
+
+Throughout, ``boundary'' refers to the circle $|t|=1$, the boundary of the disc of
+convergence in $(1)$. The only point of $\overline{\{|t|<1\}}$ at which $H$ fails to be
+analytic is $t=+1$; the point $t=-1$, where the denominator $1-t$ does not vanish, is
+not a singularity. This asymmetry is the entire content of what follows.
+
+\section{An exact formula for the coefficients}
+
+\begin{lemma}\label{lem:exact}
+For every $n\ge 0$,
+\[
+h_n\;=\;2-\delta_{n,0}
+\qquad\text{equivalently}\qquad
+h_0=1,\quad h_n=2\ \ (n\ge1),
+\]
+where $\delta_{n,0}$ is the Kronecker delta.
+\end{lemma}
+
+\begin{proof}
+We decompose $H$ over the two boundary points $t=\pm1$, exactly as the deformed
+calculation decomposes $1/(1-t^2)$. Since $H$ is a ratio of polynomials of equal degree,
+the decomposition carries a polynomial part:
+\[
+\frac{1+t}{1-t}
+\;=\;\underbrace{\frac{2}{1-t}}_{\text{pole at }t=+1}
+\;+\;\underbrace{\frac{0}{1+t}}_{\text{pole at }t=-1}
+\;-\;1 ,
+\]
+an equality of rational functions on $\mathbb{C}\setminus\{1\}$; one checks it by
+clearing denominators, $\,2-(1-t)=1+t$. The coefficient attached to the second boundary
+point $t=-1$ is identically zero. On the disc $|t|<1$ the surviving pole expands as the
+absolutely convergent geometric series $\frac{1}{1-t}=\sum_{i\ge0}t^{i}$, so that
+\[
+[t^n]\,\frac{2}{1-t}=2\quad(n\ge0),
+\qquad
+[t^n]\,(-1)=-\delta_{n,0},
+\qquad
+[t^n]\,\frac{0}{1+t}=0 .
+\]
+Since the Taylor coefficients of the analytic function $H$ are unique, comparison with
+$(1)$ gives $h_n=2-\delta_{n,0}$.
+\end{proof}
+
+\noindent
+It is worth isolating what the proof used. The expansion $\frac{1}{1+t}=\sum_{i\ge0}(-1)^i t^i$
+is the only place a factor $(-1)^n$ could enter a coefficient of $H$; it is attached to
+the pole at $t=-1$. Here that pole is absent (its coefficient is $0$), so no $(-1)^n$
+ever appears. In the deformed companion the same expansion is present with coefficient
+$\tfrac12 e^{-c}\neq0$, and it is precisely that term which alternates.
+
+\section{A termination estimate (the analogue of the exponential tail)}
+
+In the deformed problem the numerator $e^{ct}$ is an infinite series, and the error in
+the limiting expression is governed by the tail of that series. Here the numerator
+$1+t$ is a polynomial, the convolution terminates, and the corresponding ``tail'' is not
+merely small but identically zero past the degree of the numerator. We state this in the
+form we need.
+
+\begin{lemma}\label{lem:terminate}
+Let $P(t)=\sum_{k=0}^{d}p_k t^k$ be a polynomial and $H(t)=P(t)/(1-t)=\sum_{n\ge0}h_n t^n$
+on $|t|<1$. Then for every $n\ge d$,
+\[
+h_n\;=\;P(1)\;=\;\sum_{k=0}^{d}p_k ,
+\]
+a constant independent of $n$. In particular the deviation of $h_n$ from this constant
+is exactly $0$ for all $n\ge d$.
+\end{lemma}
+
+\begin{proof}
+On $|t|<1$ write $H(t)=P(t)\sum_{m\ge0}t^m$, a product of an entire polynomial and an
+absolutely convergent geometric series; the Cauchy product converges absolutely and its
+$t^n$ coefficient is the finite convolution
+\[
+h_n=\sum_{k=0}^{\min(n,d)}p_k .
+\]
+For $n\ge d$ the upper limit is $d$, so $h_n=\sum_{k=0}^{d}p_k=P(1)$, independent of $n$.
+\end{proof}
+
+\begin{corollary}\label{cor:terminate2}
+For $H(t)=(1+t)/(1-t)$ we have $P(t)=1+t$, so $d=1$ and $P(1)=2$; hence $h_n=2$ for all
+$n\ge1$. Writing $\varepsilon_n:=h_n-2$ for the deviation from the eventual value, we
+have
+\[
+\varepsilon_n=-\delta_{n,0},\qquad\text{so}\qquad \varepsilon_n=0\ \text{for all } n\ge1 .
+\]
+\end{corollary}
+
+\noindent
+This is the structural counterpart of the deformed tail bound
+$|\varepsilon_n(c)|\le |c|^{\,n+1}/(n+1)!\,e^{|c|}$. There the error decays
+super-exponentially but is positive for every $n$; here it is not merely small, it is
+zero. The reason is the same in both problems --- the size of the error is controlled by
+how much of the numerator's expansion has yet to enter the convolution --- but a
+polynomial numerator exhausts itself after finitely many steps, whereas an exponential
+numerator never does.
+
+\section{The asymptotics}
+
+\begin{theorem}\label{thm:main}
+For every $n\ge0$,
+\[
+h_n\;=\;2\;+\;\varepsilon_n,\qquad \varepsilon_n=-\delta_{n,0},
+\]
+so $\varepsilon_n=0$ for all $n\ge1$. Consequently the full sequence converges,
+\[
+\lim_{n\to\infty}h_n=2 ,
+\]
+and the even and odd subsequences share this single limit,
+\[
+\lim_{\substack{n\to\infty\\ n\ \mathrm{even}}}h_n
+=\lim_{\substack{n\to\infty\\ n\ \mathrm{odd}}}h_n
+=2 .
+\]
+There is no parity splitting: the limit does not depend on the parity of $n$.
+\end{theorem}
+
+\begin{proof}
+The exact formula is Lemma~\ref{lem:exact}, equivalently
+Corollary~\ref{cor:terminate2} with $\varepsilon_n=h_n-2=-\delta_{n,0}$. For $n\ge1$ we
+have $\varepsilon_n=0$, so $h_n=2$ identically; a sequence equal to $2$ from $n=1$
+onward converges to $2$, and every subsequence --- in particular the even-$n$ and odd-$n$
+subsequences --- has the same limit $2$. Since no factor $(-1)^n$ occurs (the pole at
+$t=-1$ being absent, by Lemma~\ref{lem:exact}), there is nothing to distinguish the two
+parities.
+\end{proof}
+
+\begin{corollary}[contrast with the deformed family]\label{cor:contrast}
+In the deformed companion, for $H^{(c)}(t)=e^{ct}/(1-t^2)$ one has
+$h^{(c)}_n=\tfrac12\bigl(e^{c}+(-1)^n e^{-c}\bigr)+\varepsilon_n(c)$, with even-$n$ limit
+$\cosh c$ and odd-$n$ limit $\sinh c$, two values that coincide only when $\sinh c=0$,
+i.e.\ $c=0$. By contrast the undeformed sequence has a single limit $2$ for both
+parities, for every realisation of the construction. The deformed even and odd limits do
+not specialise to the undeformed value: as $c\to0$ they tend to $1$ and $0$, the
+coefficients of $1/(1-t^2)$, not to $2$. The undeformed sequence $(1+t)/(1-t)$ is
+therefore not a member of the one-parameter deformed family $e^{ct}/(1-t^2)$, and the
+comparison below is between two genuinely different generating functions, not two values
+of one parameter.
+\end{corollary}
+
+\section{Comparison with the deformed family: locating the oscillation}
+
+\begin{remark}[which pole supplies what]\label{rem:poles}
+Place the two generating functions side by side on the closed unit disc and list their
+singularities on the boundary circle $|t|=1$:
+\[
+H^{(c)}(t)=\frac{e^{ct}}{(1-t)(1+t)}\quad\text{(poles at }t=+1\text{ and }t=-1),
+\qquad
+H(t)=\frac{1+t}{1-t}\quad\text{(pole at }t=+1\text{ only).}
+\]
+In each case the coefficient asymptotics are governed by these boundary poles. A simple
+pole at $t=+1$ contributes a constant (parity-independent) mode to $h_n$; a simple pole
+at $t=-1$ contributes the mode $(-1)^n$, because $\frac{1}{1+t}=\sum_n(-1)^n t^n$.
+
+For the deformed function both poles are present and neither is cancelled, since the
+numerator $e^{ct}$ is entire and zero-free. The pole at $t=+1$ supplies the constant
+$\tfrac12 e^{c}$ and the pole at $t=-1$ supplies the alternating $\tfrac12(-1)^n e^{-c}$;
+their sum is $\cosh c$ on even $n$ and $\sinh c$ on odd $n$. The splitting of the limit
+into two distinct values --- the oscillation --- is produced \emph{solely} by the
+\emph{location} $t=-1$ of the second pole, and the parameter $c$ only fixes the two
+residue magnitudes $e^{\pm c}/2$.
+
+For the undeformed function the numerator $1+t$ vanishes at $t=-1$ \emph{exactly where
+the second pole would sit}, cancelling it. Only the pole at $t=+1$ survives, only the
+constant mode is present, and the alternating mode has coefficient $0$
+(Lemma~\ref{lem:exact}). Hence a single limit and no oscillation. The contrast between
+oscillation and its absence is thus, quite literally, the presence or absence of a
+singularity at the single point $t=-1$.
+\end{remark}
+
+\begin{remark}[a one-line criterion]\label{rem:criterion}
+The mechanism is general. If $G$ is meromorphic on a neighborhood of $\overline{\{|t|<1\}}$
+with its only boundary singularities simple poles at points $e^{i\theta_1},\dots,e^{i\theta_k}$,
+then $[t^n]G$ is asymptotically a sum of terms $\rho_j\,e^{-i n\theta_j}$, one per pole.
+The sequence converges to a single limit (no oscillation) precisely when the only
+boundary pole sits at $\theta=0$, i.e.\ at $t=+1$; any boundary pole with $\theta\neq0$
+contributes a genuinely oscillating mode of angular frequency $\theta$. The value
+$\theta=\pi$, i.e.\ a pole at $t=-1$, gives the period-$2$ mode $(-1)^n$ and hence the
+even/odd dichotomy seen in the deformed coefficients. In one sentence:
+\emph{oscillation in the coefficient sequence is the signature of a dominant boundary
+singularity off the positive real axis.} The deformation installs such a singularity at
+$t=-1$ (via the factor $1-t^2$, which the zero-free numerator $e^{ct}$ cannot repair);
+the undeformed sequence removes it (via the numerator zero of $1+t$ at $t=-1$).
+\end{remark}
+
+\begin{remark}[relation to the spectral plots]\label{rem:spectral}
+The oscillation studied empirically in the main article lives one level further on: it
+is in the minimum-modulus eigenvalues $\mu_n$ of the matrices $J^{(c)}_{h,n}$, not
+directly in the coefficients $h_n$. The present note does not prove anything about
+$\mu_n$. What it does supply is the analytic shadow of that phenomenon at the level of
+the defining sequence: a period-$2$ ($(-1)^n$) structure is present in the deformed
+coefficients and absent in the undeformed ones, for exactly the reason given in
+Remark~\ref{rem:poles}. This is consistent with the observation recorded for the
+$2$-sequence (the deformed $c=1$ plot, with its even subsequence approaching a constant
+and its odd subsequence sitting at a separate value), and with the flatness of the
+undeformed picture. We flag the link as heuristic: whether the boundary-pole dichotomy
+propagates through the determinant and characteristic-polynomial machinery to control the
+$\mu_n$ is a separate question, and is not settled here.
+\end{remark}
+
+\begin{remark}[independence from numerics]\label{rem:numerics}
+Every assertion follows from $(1)$ together with the elementary
+Lemmas~\ref{lem:exact} and~\ref{lem:terminate}. In particular the conclusion ``no
+oscillation'' is not an extrapolation from computed coefficients: for each $n\ge1$ the
+coefficient $h_n$ is shown to equal $2$ exactly, and the deviation $\varepsilon_n$ is
+shown to vanish identically, with no appeal to a table of values.
+\end{remark}
+
+\end{document}
