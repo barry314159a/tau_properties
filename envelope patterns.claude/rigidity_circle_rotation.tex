@@ -1,0 +1,127 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\title{On the rigidity of the minimum-modulus pattern:\\ a circle-rotation reading}
+\author{Claude}
+\begin{document}
+\maketitle
+
+So far the difference-table regularities have been read as confirmation of the
+generating-function model and of the Fourier analysis. As number theory they are more
+interesting than that: the model explains the \emph{frequency} of the oscillation, but not
+its \emph{rigidity}, and the rigidity is the substantive phenomenon. Here is an opinion,
+separating what seems settled from what is genuinely open.
+
+\section{The strictness is the fingerprint of a circle rotation}
+
+A sinusoid sampled at the integers would not produce clean gaps drawn from exactly two
+values $\{4,5\}$ with the $5$ on a strict period-$9$ schedule and perfectly periodic second
+and third differences; it would jitter. The pattern observed --- two gap lengths, one
+inserted quasi-periodically --- is the signature of a \emph{Sturmian} (mechanical) word
+\cite{MorseHedlund1940,Lothaire2002}, and Sturmian words are exactly the symbolic codings of
+an irrational rotation of the circle.
+
+The mechanism makes the rotation explicit. The minima of $\mu_n^{(c)}$ fall where the phase
+$n\theta+\varphi$ is nearest an odd multiple of $\pi/2$ --- the sign changes of $h_n^{(c)}$
+(established in the companion asymptotics note). Tracking those is tracking the returns of
+the orbit $\{\,n\cdot(\theta/\pi)+\beta\,\}$ near $\tfrac12$ on the circle, an
+equidistributed orbit in the sense of Weyl \cite{Weyl1916,KuipersNiederreiter1974}. The
+\emph{three-gap theorem} --- conjectured by Steinhaus, first proved by S\'os, Sur\'anyi, and
+\'Swierczkowski \cite{Sos1958,Suranyi1958,Swierczkowski1958,vanRavenstein1988} --- states
+that the gaps between successive returns of any irrational rotation take at most three
+distinct values, arranged quasi-periodically. Here they take two, $\{4,5\}$. So the rigidity
+is not a special fact about $\tau$: it is the universal rigidity of rotation return times.
+Once one grants a single dominant complex frequency, the strict two-value pattern is
+\emph{forced}; nothing else was available.
+
+\section{The specific pattern is the continued fraction made visible}
+
+The average gap is $37/9 = 4.111\ldots$, and as a continued fraction
+\[
+\frac{37}{9} = [4;9] = 4+\frac{1}{9}.
+\]
+That two-term expression \emph{is} the observed law: the integer part $4$ is the base gap;
+the partial quotient $9$ is the period of the correction (one extra step --- a $5$ --- every
+nine). The minima locations are, to this order, a Beatty sequence
+$\lfloor k\,(37/9)+\beta\rfloor$ \cite{Beatty1926,HardyWright}. So the ``puzzle'' of why an
+$8\times4+5$ block repeats with period $37$ collapses to a two-term continued fraction. The
+Fourier peak at period $4.10$ is the blurred analytic shadow of this crisp arithmetic
+object; the difference-table view resolves the object itself, which is why it looks far more
+rigid than a spectral peak has any right to.
+
+\section{Where the interesting number theory actually lives}
+
+Two facts remain unexplained by the model.
+
+\emph{First}, that $H(t)=1+\sum_n\tau(p_n)t^n$ has a single, clean, well-isolated dominant
+complex zero at all. That one conjugate pair should govern everything is a genuine statement
+about the analytic structure of a \emph{prime-indexed} $\tau$ series --- an object with no
+modularity, no functional equation, and no Euler product. The dominant-singularity principle
+\cite{FlajoletOdlyzko1990,FlajoletSedgewick2009} tells us what such a zero \emph{would}
+control, but not why this series should have so clean a one. I know no reason.
+
+\emph{Second}, and more pointed: the value of the rotation number $\theta/\pi$ and its
+proximity to $9/37$. Is it \emph{exactly} $9/37$ or merely very close? This is decidable, and
+the meaning hinges on it.
+\begin{itemize}
+\item If $\theta/\pi$ is \emph{irrational} with continued fraction $[0;4,9,a_3,\dots]$ and
+$a_3$ large, then $9/37$ is an excellent rational approximant, the coding is Sturmian
+\cite{MorseHedlund1940,Lothaire2002}, and near $n\sim 37\,a_3$ a \emph{second-order defect}
+must appear --- a block with seven or nine $4$'s rather than eight, or two consecutive $5$'s.
+The run to $n=500$ shows about thirteen clean cycles with no such defect, which already
+forces $a_3$ to be large: $\;|\theta/\pi - 9/37|\lesssim 1/(37\cdot 500)\approx 5\times
+10^{-5}$.
+\item If $\theta/\pi$ were \emph{exactly} $9/37$, the pattern would be exactly period-$37$
+forever. That would be astonishing: it would place the nearest zero of a prime-indexed
+$\tau$ series at a rational multiple of $\pi$, demanding an arithmetic explanation.
+\end{itemize}
+My honest bet is the first --- irrational, $[0;4,9,a_3,\dots]$ with $a_3$ large --- because
+there is no reason a transcendental-looking $\theta$ assembled from $\tau$ at primes should
+be a rational multiple of $\pi$, and every real number masquerades as a small-denominator
+rational when known to only four digits. I hold it loosely; the second case, if true, would
+be worth a paper.
+
+\section{How to settle it}
+
+Pin $\theta$ down to eight or ten digits (rather than the four currently in hand), form
+$\theta/\pi$, and read its continued fraction \cite{HardyWright}. If it begins
+$[0;4,9,a_3,\dots]$, then $a_3$ \emph{predicts the exact $n$ at which the first second-order
+defect must occur} --- a prediction tested by extending the run past $n=500$ to that point.
+A defect at the predicted place proves the rotation-number account and shows $\theta/\pi$
+irrational; no defect to all computable precision would be the surprising case. In the
+language of circle dynamics, this is just reading the rotation number and its denominators
+off the orbit \cite{KatokHasselblatt1995}.
+
+\begin{thebibliography}{99}
+\bibitem{MorseHedlund1940} M.~Morse and G.~A.~Hedlund, \emph{Symbolic dynamics~II. Sturmian
+  trajectories}, Amer. J. Math. \textbf{62} (1940), 1--42.
+\bibitem{Lothaire2002} M.~Lothaire, \emph{Algebraic Combinatorics on Words}, Encyclopedia of
+  Mathematics and its Applications \textbf{90}, Cambridge University Press, 2002 (Ch.~2,
+  Sturmian words).
+\bibitem{Sos1958} V.~T.~S\'os, \emph{On the distribution mod~$1$ of the sequence $n\alpha$},
+  Ann. Univ. Sci. Budapest. E\"otv\"os Sect. Math. \textbf{1} (1958), 127--134.
+\bibitem{Suranyi1958} J.~Sur\'anyi, \emph{\"Uber die Anordnung der Vielfachen einer reellen
+  Zahl mod~$1$}, Ann. Univ. Sci. Budapest. E\"otv\"os Sect. Math. \textbf{1} (1958),
+  107--111.
+\bibitem{Swierczkowski1958} S.~\'Swierczkowski, \emph{On successive settings of an arc on the
+  circumference of a circle}, Fund. Math. \textbf{46} (1958), 187--189.
+\bibitem{vanRavenstein1988} T.~van Ravenstein, \emph{The three gap theorem (Steinhaus
+  conjecture)}, J. Austral. Math. Soc. Ser.~A \textbf{45} (1988), no.~3, 360--370.
+\bibitem{Beatty1926} S.~Beatty, \emph{Problem 3173}, Amer. Math. Monthly \textbf{33} (1926),
+  159; solutions, \textbf{34} (1927), 159--160.
+\bibitem{HardyWright} G.~H.~Hardy and E.~M.~Wright, \emph{An Introduction to the Theory of
+  Numbers}, 6th ed., Oxford University Press, 2008 (continued fractions, Ch.~X).
+\bibitem{Weyl1916} H.~Weyl, \emph{\"Uber die Gleichverteilung von Zahlen mod.~Eins}, Math.
+  Ann. \textbf{77} (1916), 313--352.
+\bibitem{KuipersNiederreiter1974} L.~Kuipers and H.~Niederreiter, \emph{Uniform Distribution
+  of Sequences}, Wiley, New York, 1974.
+\bibitem{KatokHasselblatt1995} A.~Katok and B.~Hasselblatt, \emph{Introduction to the Modern
+  Theory of Dynamical Systems}, Cambridge University Press, 1995 (rotation number, circle
+  maps).
+\bibitem{FlajoletOdlyzko1990} P.~Flajolet and A.~M.~Odlyzko, \emph{Singularity analysis of
+  generating functions}, SIAM J. Discrete Math. \textbf{3} (1990), no.~2, 216--240.
+\bibitem{FlajoletSedgewick2009} P.~Flajolet and R.~Sedgewick, \emph{Analytic Combinatorics},
+  Cambridge University Press, 2009.
+\end{thebibliography}
+
+\end{document}
